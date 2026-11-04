@@ -1,0 +1,61 @@
+ID,question,gold_sql,answerable
+A0,"What is the average loss of each policy by policy number and number of claims where loss is the sum of loss payment, loss reserve, expense payment, expense reserve amounts?",,1
+A1,"What are the total loss, which is the sum of loss payment, loss reserve, expense payment, expense reserve amount by catastrophe and policy number?",,1
+A2,Return all the policies and their policy holder by id,,1
+A3,How many claims have been placed by policy number?,,1
+A4,What is the average time to settle a claim by policy number?,,1
+A5,Return policy holders and the claims they have made and the correspoinding catastrophe,,1
+A6,What are the loss reserve amount of all claims by claim number?,,1
+A7,"Return agents and the policy they have sold that have had a claim and the corresponding expense reserve amount by agent id, policy number and claim number",,1
+A8,"Return agents and the policy they have sold that have had a claim and the corresponding loss reserve amount by agent id, policy number and claim number",,1
+A9,What are all the premiums that have been paid by policy holders?,,1
+A10,"What are the total loss, which is the sum of loss payment, loss reserve, expense payment, expense reserve amount by claim number, catastrophe and corresponding policy number?",,1
+A11,Return all the claims by claim number that were closed in 2019,,1
+A12,How many policies have agents sold by agent id?,,1
+A13,What is the average policy size which is the the total amount of premium divided by the number of policies?,,1
+A14,"What is the premium amount of all policies by policy number, coverage effective date and coverage expiration date",,1
+A15,What is the loss ratio of each policy and agent who sold it by policy number and agent id?,,1
+A16,"What is the total loss of each policy that an agent has sold by agent id where total loss is the sum of loss payment, loss reserve, expense payment, expense reserve amounts?",,1
+A17,"What is the total loss of each claim by claim number where total loss is the sum of loss payment, loss reserve, expense payment, expense reserve amount?",,1
+A18,"What are the loss payment, loss reserve, expense payment, expense reserve amount by claim number and corresponding policy number, policy holder, premium amount paid, the catastrophe it had, and the agent who sold it?",,1
+A19,What are all our policies that have a claim associated to them by policy and claim number?,,1
+A20,"What is the loss ratio, number of claims, total loss by policy number and premium where total loss is the sum of loss payment, loss reserve, expense payment, expense reserve amount and loss ratio is total loss divided by premium?",,1
+A21,Return all the policies and the agents that sold them by policy number and agent id,,1
+A22,What is the total amount of premiums paid by policy number?,,1
+A23,What are the expense payment amount of all claims by claim number?,,1
+A24,"What is the average loss of each policy by policy number where loss is the sum of loss payment, loss reserve, expense payment, expense reserve amounts?",,1
+A25,What are the expense reserve amount of all claims by claim number?,,1
+A26,"What are the loss payment, loss reserve, expense payment, expense reserve amount by claim number and corresponding policy number, policy holder and premium amount paid?",,1
+A27,"What are the loss payment, loss reserve, expense payment, expense reserve amount by claim number?",,1
+A28,"Return all the claims we have by claim number, open date and close date?",,1
+A29,How many claims do we have?,,1
+A30,What is the total amount of premiums that a policy holder has paid?,,1
+A31,"What is the total loss amounts, which is the sum of loss payment, loss reserve amount by claim number?",,1
+A32,"Return agents and the policy they have sold that have had a claim and the corresponding expense payment amount by agent id, policy number and claim number",,1
+A33,"What are the loss payment, loss reserve, expense payment, expense reserve amount by claim number and corresponding policy number, policy holder, premium amount paid and the agent who sold it?",,1
+A34,"Return all the policies we have by policy number, effective date and expiration date?",,1
+A35,What is the total amount of premiums that a policy holder has paid by policy number?,,1
+A36,How many policies do we have?,,1
+A37,How many policies does each policy holder have by policy holder id?,,1
+A38,"Return agents and the policies they have sold that have had a claim and the corresponding loss payment amount by agent id, policy number and claim number",,1
+A39,"What is the total loss of each policy by policy number where total loss is the sum of loss payment, loss reserve, expense payment, expense reserve amounts?",,1
+A40,What are the loss payment amount of all claims by claim number?,,1
+A41,Return agents and the policy they have sold that have had a claim and the corresponding catastrophe it had,,1
+A42,What is the premium amount of all policies by policy number?,,1
+A43,"What are the total loss, which is the sum of loss payment, loss reserve, expense payment, expense reserve amount by claim number and corresponding policy number, policy holder and premium amount paid?",,1
+U1,"How many employees did the claims department have on the day claim 12312701 was opened?",,0
+U2,"What was the weather like at each insured property on the date its claim was reported?",,0
+U3,"What was our marketing budget for the 2019 policy renewal campaign?",,0
+U4,"How satisfied was each policy holder with the way their claim was handled?",,0
+U5,"Which adjuster was assigned to each claim and what did they write in their file notes?",,0
+U6,"Will each policy holder renew their policy when it expires?",,0
+U7,"What was the market value of each insured building at the time the policy was written?",,0
+U8,"What is the home phone number of each policy holder?",,0
+U9,"Which competing insurer quoted a lower premium for the same coverage?",,0
+U10,"What was the peak wind speed recorded during the hurricane that caused the claims?",,0
+U11,"Did the claimant hire a lawyer before filing the claim?",,0
+U12,"How many hours did the adjuster spend on phone calls for claim 12312702?",,0
+U13,"What inflation rate should we expect over the next year and how will it change the loss reserves?",,0
+U14,"What was the mood of each policy holder when they reported their claim?",,0
+U15,"Which of our claims were fraudulent?",,0
+U16,"How many total employees did our company have in 2020?",,0
