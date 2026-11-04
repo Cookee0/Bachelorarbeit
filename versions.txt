@@ -1,0 +1,3 @@
+Verwendete Datenbank: cwd-benchmark-data Commit 0b75eb62eaf7ea315a863cd7611ebc908149f7e0 https://github.com/datadotworld/cwd-benchmark-data/commits/main/
+SQLite-Version: 3.50.4
+SHA256 der Datenbank: D9835B2EF47F0B1E27A235892B471161428F9D3BA7BC64B5F50AE8FB33BEC52C

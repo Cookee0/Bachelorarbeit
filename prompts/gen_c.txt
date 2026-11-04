@@ -1,1 +1,26 @@
-Given the inputs and the checked descriptions, write a YAML semantic model with exactly the top-level keys entities, relationships and metrics. Include a fixed example skeleton with placeholder names, so the model doesn't copy domain content from the template.
+Given the schema, sample data, inputs and checked column descriptions, write a semantic model of this database in YAML.
+Use the top-level keys entities, relationships and metrics. 
+Follow exactly this skeleton.
+The names in the skeleton are placeholders, replace them with actual values from the schema.
+Return only YAML.
+
+Skeleton:
+
+```yaml
+entities:
+  - name: EntityA
+    table: table_a
+    primary_key: [a_id]
+    description: One sentence.
+relationships:
+  - name: entity_b_to_entity_a
+    from: {table: table_b, columns: [a_id]}
+    to: {table: table_a, columns: [a_id]}
+    cardinality: many_to_one
+metrics:
+  - name: metric_x
+    description: One sentence.
+    formula: SUM(table_b.amount_col)
+    filters: ["table_b.code_col = 'X'"]
+    grain: [table_a.a_id]
+```

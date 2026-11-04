@@ -1,7 +1,6 @@
 ﻿annotated-types==0.8.0
 anyio==4.15.1
 certifi==2026.7.22
-duckdb==1.5.6
 Faker==40.40.0
 formulaic==1.2.2
 h11==0.16.0
