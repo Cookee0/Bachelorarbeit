@@ -1,0 +1,2 @@
+Describe every table and every column of the schema in plain English, including what each code value means. 
+NEVER describe joins, relationships or how to calculate anything. Fixed output format: one heading per table, one bullet per column.

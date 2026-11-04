@@ -1,0 +1,1 @@
+Given the inputs and the checked descriptions, write a YAML semantic model with exactly the top-level keys entities, relationships and metrics. Include a fixed example skeleton with placeholder names, so the model doesn't copy domain content from the template.
