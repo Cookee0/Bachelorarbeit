@@ -93,3 +93,4 @@ unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,eviden
         from: {table: Claim_Coverage, columns: [Claim_Identifier]}
         to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
         cardinality: many_to_one",,rule,unit_id 8,"Identisch mit Unit 8 (Duplikat); s. Prüfanweisung Abschnitt 7 ""Element doppelt beschrieben"""
+25,C,Code,Code,delete,```yaml ...```,,none,,YAML will not parse with those delimiters.
