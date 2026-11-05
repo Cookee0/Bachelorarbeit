@@ -1,6 +1,5 @@
 Claim:
 - Claim_Identifier: Unique identifier for claims.
-- Catastrophe_Identifier: Reference to the catastrophe in the Catastrophe table.
 - Claim_Description: Description of the claim.
 - Claims_Made_Date: Date when the claim was made.
 - Company_Claim_Number: Number used by the company.

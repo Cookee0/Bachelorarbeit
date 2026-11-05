@@ -77,7 +77,7 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | Nr. | Prüffrage                                                                                                         | Wenn ja                                                                              | Wenn nein                           |
 | --- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------- |
 | 1   | Bezieht sich die Einheit auf eine Tabelle oder Spalte, die es in der DDL nicht gibt?                              | `delete` (Beleg: DDL)                                                                | weiter mit F2                       |
-| 2   | Nur B: Beschreibt die Einheit Verknüpfungen, Join-Pfade oder Berechnungsregeln?                                   | Betroffenen Teil streichen: `correct`, oder ganz `delete`, wenn nichts übrig bleibt. | weiter mit F3                       |
+| 2   | Nur B: Beschreibt die Einheit Verknüpfungen, Join-Pfade oder Berechnungsregeln? | Betroffenen Teil streichen: `correct`, oder ganz `delete`, wenn nichts übrig bleibt. | weiter mit F3                       |
 | 3   | Steht mindestens eine maßgebliche Quelle (Abschnitt 3) im direkten Widerspruch zur Aussage?                       | weiter mit F4                                                                        | weiter mit F5                       |
 | 4   | Lässt sich der widerlegte Teil durch eine Aussage ersetzen, die der Beleg direkt stützt, ohne Neues hinzuzufügen? | `correct`                                                                            | `delete`                            |
 | 5   | Wird die Aussage durch mindestens eine Quelle gestützt?                                                           | `keep`                                                                               | `unverifiable` (unverändert lassen) |
@@ -90,7 +90,9 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | Element doppelt beschrieben                                                                | Erste Beschreibung prüfen, zweite löschen; Beleg ist der Verweis auf die erste `unit_id`   | `delete`                                           |
 | Codewert ohne Definition in der Ontologie (z. B. `PH`, `AG`)                               | Bedeutung weder bestätigt noch widerlegt                                                   | `unverifiable`                                     |
 | Codewert, der in den Daten nicht vorkommt                                                  | Die offizielle Datenbank ist zu klein, um ihn auszuschließen                               | `unverifiable`, wenn nicht anders widerlegt        |
-| Beziehung zu einer Tabelle, die in der DDL referenziert wird, allerdings nicht existiert   | Tabelle existiert im Schema nicht (F1)                                                     | `delete`                                           |
+| Beschreibung nennt eine andere Tabelle oder bezeichnet die Spalte als Fremdschlüssel (B beschreibt nur Spalten, keine Beziehungen) | Nennung bzw. Fremdschlüssel-Aussage streichen (F2). Bleibt eine belegbare Aussage übrig, nur den Teil streichen, sonst ganz löschen. | `correct` bzw. `delete`                            |
+| DDL enthält Fremdschlüssel auf nicht existierende Tabelle, die Beschreibung nennt sie nicht | Die Zieltabelle ist keine Belegquelle. Die Einheit wird nur danach beurteilt, ob ihr eigener Inhalt gestützt ist (F5). | `keep` / `unverifiable`                            |
+| Beschreibung wiederholt nur den Spaltennamen                                               | Durch die Existenz der Spalte in der DDL gestützt (F5)                                     | `keep`, Quelle `ddl`                               |
 | Beziehung ohne Fremdschlüssel in der DDL                                                   | Bestätigt, wenn in `reference_relationships.csv` enthalten. Ansonsten nicht verifizierbar. | `keep` / `unverifiable`                            |
 | Kardinalität angegeben (1:1, 1:n)                                                          | Nur über DDL verifizierbar                                                                 | `keep`, `delete`, `correct` nach Entscheidungsbaum |
 | Kennzahl mit plausibler, aber nicht belegter Formel                                        | Weder bestätigt noch widerlegt                                                             | `unverifiable`                                     |
@@ -114,9 +116,9 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | `action`          | `keep`, `correct`, `delete`, `unverifiable`, `syntax`                                             | immer                   |
 | `original`        | Wortlaut der Einheit im Rohartefakt                                                               | immer                   |
 | `corrected`       | Wortlaut nach der Prüfung (leer bei `delete`)                                                     | bei `correct`, `syntax` |
-| `evidence_source` | `ddl`, `data`, `ontology`, `rule`, `none`                                                         | immer                   |
-| `evidence`        | DDL-Zeile, SQL-Abfrage im Wortlaut (auf `official.sqlite`), IRI, „B-Regel“, Verweis auf `unit_id` | bei `correct`, `delete` |
-| `reason`          | Begründung für die Änderung                                                                       | immer                   |
+| `evidence_source` | `ddl`, `data`, `ontology`, `rule`, `none` | immer                   |
+| `evidence`        | DDL-Zeile (`Tabelle.Spalte`), SQL-Abfrage im Wortlaut (auf `official.sqlite`), Verweis auf `unit_id` | bei `correct`, `delete`. Bei `keep` empfohlen |
+| `reason`          | Begründung für die Änderung                                                                       | bei `correct`, `delete`, `unverifiable`                   |
 
 ## 8.2 Gemeinsame `review.csv`
 
