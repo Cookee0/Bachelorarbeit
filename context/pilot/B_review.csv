@@ -1,0 +1,67 @@
+unit_id,unit,artefact,unit_type,action,original,corrected,evidence_source,evidence,reason
+1,Claim,B,table,keep,,,DDL,Claim,
+2,Claim_Identifier,B,column,keep,Unique identifier for claims.,,,,
+3,Catastrophe_Identifier,B,column,keep,Reference to the catastrophe in the Catastrophe table.,,,,
+4,Claim_Description,B,column,unverifiable,Description of the claim.,,official.sqlite;DDL,Claim.Claim_Description,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+5,Claims_Made_Date,B,column,unverifiable,Date when the claim was made.,,official.sqlite;DDL,Claim.Claims_Made_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+6,Company_Claim_Number,B,column,keep,Number used by the company.,,,,
+7,Company_Subclaim_Number,B,column,delete,Subclaim number from the subclaims table.,,DDL,Claim.Company_Subclaim_Number,Referenzierte Tabelle nicht vorhanden.
+8,Insurable_Object_Identifier,B,column,keep,Identifier for the insurable object.,,,,
+9,Occurrence_Identifier,B,column,keep,Identifier for the occurrence of the claim.,,,,
+10,Entry_Into_Claims_Made_Program_Date,B,column,keep,Date when the claim was entered into the program.,,,,
+11,Claim_Open_Date,B,column,keep,Date when the claim opens.,,,,
+12,Claim_Close_Date,B,column,keep,Date when the claim closes.,,,,
+13,Claim_Reopen_Date,B,column,keep,Date when the claim reopens.,,,,
+14,Claim_Status_Code,B,column,keep,Status code for the claim.,,,,
+15,Claim_Reported_Date,B,column,keep,Date when the claim was reported.,,,,
+16,Claim_Amount,B,table,keep,,,DDL,Claim_Amount,
+17,Claim_Amount_Identifier,B,column,keep,Unique identifier for the amount.,,,,
+18,Claim_Identifier,B,column,keep,Identifier of the claim.,,,,
+19,Claim_Offer_Identifier,B,column,keep,Identifier of the offer related to the claim.,,,,
+20,Amount_Type_Code,B,column,unverifiable,Code for the amount type.,,official.sqlite;DDL,Claim_Amount.Claim_Amount_Type_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+21,Event_Date,B,column,keep,Date when the event occurred.,,,,
+22,Claim_Amount,B,column,keep,Amount in decimal format.,,,,
+23,Insurance_Type_Code,B,column,keep,Code for the insurance type.,,,,
+24,Claim_Coverage,B,table,keep,,,DDL,Claim_Coverage,
+25,Claim_Identifier,B,column,keep,Identifier for the claim.,,,,
+26,Effective_Date,B,column,keep,Date when the policy coverage starts.,,,,
+27,Policy_Coverage_Detail_Identifier,B,column,keep,Identifier of the policy coverage detail.,,,,
+28,Insurable_Object_Identifier,B,column,keep,Identifier for the insurable object.,,,,
+29,Expense_Payment,B,table,keep,,,DDL,Expense_Payment,
+30,Claim_Amount_Identifier,B,column,keep,Unique identifier for the payment.,,,,
+31,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Expense_Payment table.,,DDL,DDL,Referenzierte Tabelle nicht vorhanden.
+32,Expense_Reserve,B,table,keep,,,DDL,Expense_Reserve,
+33,Claim_Amount_Identifier,B,column,keep,Unique identifier for the reserve.,,,,
+34,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Expense_Reserve table.,,DDL,DDL,Referenzierte Tabelle nicht vorhanden.
+35,Loss_Payment,B,table,keep,,,DDL,Loss_Payment,
+36,Claim_Amount_Identifier,B,column,keep,Unique identifier for the payment.,,,,
+37,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Loss_Payment table.,,DDL,DDL,Referenzierte Tabelle nicht vorhanden.
+38,Loss_Reserve,B,table,keep,,,DDL,Loss_Reserve,
+39,Claim_Amount_Identifier,B,column,keep,Unique identifier for the reserve.,,,,
+40,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Loss_Reserve table.,,DDL,DDL,Referenzierte Tabelle nicht vorhanden.
+41,Policy,B,table,keep,,,DDL,Policy,
+42,Policy_Identifier,B,column,keep,Identifier for the policy.,,,,
+43,Effective_Date,B,column,keep,Date when the policy starts.,,,,
+44,Expiration_Date,B,column,keep,Date when the policy ends.,,,,
+45,Policy_Number,B,column,keep,Number of the policy.,,,,
+46,Status_Code,B,column,unverifiable,Code for the status of the policy.,,official.sqlite;DDL,Policy.Status_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+47,Geographic_Location_Identifier,B,column,unverifiable,Identifier for the geographic location.,,official.sqlite;DDL,Policy.Geographic_Location_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+48,Policy_Amount,B,table,keep,,,DDL,Policy_Amount,
+49,Policy_Amount_Identifier,B,column,keep,Unique identifier for the amount.,,,,
+50,Geographic_Location_Identifier,B,column,unverifiable,Identifier for the location.,,official.sqlite;DDL,Policy.Geographic_Location_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+51,Policy_Identifier,B,column,keep,Identifier for the policy.,,,,
+52,Effective_Date,B,column,keep,Date when the policy starts.,,,,
+53,Amount_Type_Code,B,column,keep,Code for the amount type.,,,,
+54,Earning_Begin_Date,B,column,unverifiable,Start date of earnings.,,official.sqlite;DDL,Policy.Earning_Begin_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+55,Earning_End_Date,B,column,unverifiable,End date of earnings.,,official.sqlite;DDL,Policy.Earning_End_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+56,Policy_Coverage_Detail_Identifier,B,column,keep,Identifier for the coverage detail.,,,,
+57,Policy_Coverage_Detail,B,table,keep,,,DDL,Policy_Coverage_Detail,
+58,Effective_Date,B,column,keep,Date when the policy covers.,,,,
+59,Policy_Coverage_Detail_Identifier,B,column,keep,Identifier for the policy coverage detail.,,,,
+60,Coverage_Identifier,B,column,unverifiable,Identifier for the coverage part.,,official.sqlite;DDL,Policy_Coverage_Detail.Coverage_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+61,Insurable_Object_Identifier,B,column,keep,Identifier for the insurable object.,,,,
+62,Policy_Identifier,B,column,keep,Identifier for the policy.,,,,
+63,Coverage_Part_Code,B,column,unverifiable,Code for the coverage part.,,official.sqlite;DDL,Policy_Coverage_Detail.Coverage_Part_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+64,Coverage_Description,B,column,unverifiable,Description of the coverage.,,official.sqlite;DDL,Policy_Coverage_Detail.Coverage_Description,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+65,Expiration_Date,B,column,keep,Date when the coverage expires.,,,,
+66,Coverage_Inclusion_Exclusion_Code,B,column,unverifiable,Code for inclusion/exclusion.,,official.sqlite;DDL,Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
