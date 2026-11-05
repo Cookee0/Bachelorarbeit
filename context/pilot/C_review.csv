@@ -88,8 +88,9 @@ unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,eviden
         cardinality: many_to_one",,rule,unit_id 6,"Gleiche Beziehung wie unit 6, nur in umgekehrter Richtung (Duplikat). s. Prüfanweisung Abschnitt 7 ""Element doppelt beschrieben"""
 23,C,entity:Claim_Coverage,entity,delete,"name: Claim_Coverage
     table: Claim_Coverage
-    description: A claim has a policy coverage detail.",,none,,Duplikat von Unit 7.
+    description: A claim has a policy coverage detail.",,rule,unit 7,Duplikat von Unit 7.
 24,C,rel:Claim_Coverage->Policy_Coverage_Detail,relationship,delete,"name: entity_b_to_entity_a
         from: {table: Claim_Coverage, columns: [Claim_Identifier]}
         to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
         cardinality: many_to_one",,rule,unit_id 8,"Identisch mit Unit 8 (Duplikat); s. Prüfanweisung Abschnitt 7 ""Element doppelt beschrieben"""
+25,C,Code,Code,delete,```yaml ...```,,none,,YAML will not parse with those delimiters.
