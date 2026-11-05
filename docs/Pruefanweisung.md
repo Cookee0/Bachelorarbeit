@@ -1,5 +1,5 @@
 # Prüfanweisung für den modellerzeugten Kontext
-Entwurf 
+Version: 1.0 (not to be changed anymore unless necessary (Abschnitt 9 for example))
 Stand 05.11.2026
 ## 1 Ziel
 
@@ -19,10 +19,10 @@ Jede Änderung wird in einem eigenen Prüfprotokoll `{artefakt}_review.csv` und 
 
 | Quelle                          | Datei                                 | Zitationsstil                                           | Wofür                                                                              |
 | ------------------------------- | ------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Schema                          | `benchmark/ACME_small.ddl`            | Tabelle und Spalte, z. B. `DDL claim, Claim_Identifier` | Existenz von Tabellen und Spalten, Datentypen, Schlüssel, NOT NULL, Fremdschlüssel |
+| Schema                          | `benchmark/Bachelorarbeit/DDL/ACME_small.ddl` | Zeilennummer, z. B. `DDL Line 36`                | Existenz von Tabellen und Spalten, Datentypen, Schlüssel, NOT NULL, Fremdschlüssel |
 | Daten der offiziellen Datenbank | `data/official.sqlite`                | Die SQL-Abfrage                                         | Vorkommende Werte, Wertebereiche, Formate                                          |
 | Ontologie                       | `context/ontology_reference.txt`      | z.B. `Classes`, `Relationships`, `Attributes`           | Fachliche Bedeutung von Begriffen                                                  |
-| Tabellenbeziehungen             | `context/reference_relationships.csv` | Zeile                                                   | Fremdschlüsselbeziehungen zwischen Tabellen                                        |
+| Tabellenbeziehungen             | `context/reference_relationships.csv` | Zeilennummer, z. B. `reference_relationships.csv Line 3` | Fremdschlüsselbeziehungen zwischen Tabellen                                        |
 
 **Nicht zulässig sind:**
 - eigenes Fachwissen
@@ -63,11 +63,11 @@ Eine Prüfeinheit ist eine Aussage über ein Element.
 | Schritt | Tätigkeit                                                                                                                                                                                                                 | Ergebnis                             |
 | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | 1       | Zeitmessung starten. `*_raw.*` nach `*_checked.*` kopieren. Die Rohdatei wird nie bearbeitet.                                                                                                                             | Kopie der Rohdatei                   |
-| 2       | Artefakt vollständig in Einheiten zerlegen. Jede Einheit mit `unit_id`, `artefact`, `unit`, `unit_type`, `action`, `original`, `evidence_source`, `evidence` und `reason` in `*_units.csv` eintragen.                  | Liste aller Einheiten                |
+| 2       | Artefakt vollständig in Einheiten zerlegen. Jede Einheit mit `unit_id`, `artefact`, `unit`, `unit_type`, `action`, `original`, `evidence_source`, `evidence` und `reason` in `{artefakt}_review.csv` eintragen.                  | Liste aller Einheiten                |
 | 3       | Jede Einheit nach dem Entscheidungsbaum ([[#6 Entscheidungsbaum]]) prüfen. Aktion, Beleg und Begründung eintragen.                                                                                                        | Ausgefülltes Protokoll               |
 | 4       | Korrekturen und Löschungen exakt wie protokolliert in `*_checked.*` umsetzen.                                                                                                                                             | Geprüfte Datei                       |
 | 5       | Nur C: YAML-Gültigkeit prüfen (`yaml.safe_load`). Bei Fehlern ausschließlich syntaktisch reparieren und als `syntax` protokollieren (Abschnitt 7).                                                                        | Parsbare Datei                       |
-| 6       | Prüfung: Jede `correct`- und `delete`-Zeile hat einen Beleg. Die Zahl der Protokollzeilen entspricht der Zahl der Einheiten aus Schritt 2. Die Differenz zwischen Roh- und Prüfdatei zeigt nur protokollierte Änderungen. | Kontrolliertes Ergebnis              |
+| 6       | Prüfung: Jede `correct`- und `delete`-Zeile hat einen Beleg. Die Zahl der Protokollzeilen (ohne `syntax`-Zeilen) entspricht der Zahl der Einheiten aus Schritt 2. `syntax`-Zeilen sind keine Einheiten und werden zusätzlich geführt. Die Differenz zwischen Roh- und Prüfdatei zeigt nur protokollierte Änderungen. | Kontrolliertes Ergebnis              |
 | 7       | Zeitmessung stoppen und in `review.csv` eintragen.                                                                                                                                                                        | Abgeschlossenes , geprüftes Artefakt |
 
 ## 6 Entscheidungsbaum
@@ -87,7 +87,7 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | Fall                                                                                       | Regel                                                                                      | Aktion                                             |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------------------- |
 | Aussage ist teilweise richtig                                                              | Den widerlegten Teil minimal berichtigen oder streichen, den Rest unverändert lassen       | `correct`                                          |
-| Element doppelt beschrieben                                                                | Erste Beschreibung prüfen, zweite löschen; Beleg ist der Verweis auf die erste `unit_id`   | `delete`                                           |
+| Element doppelt beschrieben                                                                | Erste Beschreibung prüfen, zweite löschen. Beleg: `evidence_source=rule`, `evidence=unit_id X` (die behaltene Einheit). Gleichheit wird nach der Korrektur beurteilt: Eine Beziehung in umgekehrter Richtung ist dieselbe Beziehung. Ist die erste Fassung widerlegt und erst die spätere belegt oder korrigierbar, wird die erste gelöscht und die spätere behalten (Verweis auf diese `unit_id`). | `delete`                                           |
 | Codewert ohne Definition in der Ontologie (z. B. `PH`, `AG`)                               | Bedeutung weder bestätigt noch widerlegt                                                   | `unverifiable`                                     |
 | Codewert, der in den Daten nicht vorkommt                                                  | Die offizielle Datenbank ist zu klein, um ihn auszuschließen                               | `unverifiable`, wenn nicht anders widerlegt        |
 | Beschreibung nennt eine andere Tabelle oder bezeichnet die Spalte als Fremdschlüssel (B beschreibt nur Spalten, keine Beziehungen) | Nennung bzw. Fremdschlüssel-Aussage streichen (F2). Bleibt eine belegbare Aussage übrig, nur den Teil streichen, sonst ganz löschen. | `correct` bzw. `delete`                            |
@@ -95,11 +95,13 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | Beschreibung wiederholt nur den Spaltennamen                                               | Durch die Existenz der Spalte in der DDL gestützt (F5)                                     | `keep`, Quelle `ddl`                               |
 | Nur C: Der DDL-Fremdschlüssel einer Beziehung verweist auf eine Tabelle, die es in der DDL nicht gibt (`declared_target_not_in_db`), die Beziehung im Artefakt nennt eine andere Zieltabelle | Eine Korrektur würde auf eine nicht vorhandene Tabelle verweisen und SQL-Abfragen fehlschlagen lassen. Die Einheit wird nicht korrigiert, sondern gelöscht. | `delete` |
 | Beziehung ohne Fremdschlüssel in der DDL                                                   | Bestätigt, wenn in `reference_relationships.csv` enthalten. Ansonsten nicht verifizierbar. | `keep` / `unverifiable`                            |
-| Kardinalität angegeben (1:1, 1:n)                                                          | Nur über DDL verifizierbar                                                                 | `keep`, `delete`, `correct` nach Entscheidungsbaum |
+| Kardinalität angegeben (1:1, 1:n)                                                          | Nur über DDL verifizierbar. Ist die Fremdschlüsselspalte in der Kindtabelle zugleich der vollständige Primärschlüssel, ist die Kardinalität `one_to_one`, `many_to_one` ist widerlegt. | `keep`, `delete`, `correct` nach Entscheidungsbaum |
+| Nur C: Richtung von `from` und `to`                                                        | `from` ist die Tabelle, die den Fremdschlüssel enthält (Kindtabelle), `to` die referenzierte Tabelle. Vertauschte Richtung ist widerlegt und wird durch Tauschen korrigiert. | `correct` nach Entscheidungsbaum |
 | Kennzahl mit plausibler, aber nicht belegter Formel                                        | Weder bestätigt noch widerlegt                                                             | `unverifiable`                                     |
 | Kennzahl aggregiert eine nicht numerische Spalte oder nutzt eine nicht existierende Spalte | Widerlegt durch DDL                                                                        | `delete` oder `correct` nach Entscheidungsbaum     |
 | YAML parst nicht korrekt                                                                   | Nur syntaktisch reparieren, Inhalt unverändert                                             | `syntax`                                           |
 | Fließtext außerhalb der YAML-Struktur                                                      | Entfernen, wenn er das Parsen verhindert, sonst behalten                                   | `syntax` bzw. keine Einheit                        |
+| Nur C: Markdown-Code-Fences (` ```yaml ` am Anfang, ` ``` ` am Ende)                       | Verhindern `yaml.safe_load`, daher entfernen. Je Fence eine `syntax`-Zeile (`unit` = `syntax:code_fence`, `unit_type` = `syntax`, `evidence_source` = `rule`); sie zählt nicht als Einheit (Schritt 6) | `syntax`                                           |
 | YAML weicht von der Vorlage ab (andere Schlüssel, andere Struktur)                         | Nicht umstrukturieren. Ausschließlich Parsbarkeit herstellen                               | keine Aktion bzw. `syntax`                         |
 | Ausgabe ist abgeschnitten                                                                  | Die unvollständige letzte Einheit löschen; Beleg „abgeschnitten“                           | `delete`                                           |
 
@@ -119,7 +121,7 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | `original`        | Wortlaut der Einheit im Rohartefakt                                                               | immer                   |
 | `corrected`       | Wortlaut nach der Prüfung (leer bei `delete`)                                                     | bei `correct`, `syntax` |
 | `evidence_source` | `ddl`, `data`, `ontology`, `relationship`, `rule`, `none`; mehrere Quellen mit `;` trennen | immer                   |
-| `evidence`        | DDL-Zeile (`Tabelle.Spalte`), SQL-Abfrage im Wortlaut (auf `official.sqlite`), Verweis auf `unit_id` | bei `correct`, `delete`. Bei `keep` empfohlen |
+| `evidence`        | DDL-Zeile (`DDL Line N`), Zeile der Referenzbeziehungen (`reference_relationships.csv Line N`), SQL-Abfrage im Wortlaut (auf `official.sqlite`), Verweis auf `unit_id`. Bei mehreren Quellen in `evidence_source` enthält `evidence` je Quelle einen Beleg, mit `;` getrennt, in derselben Reihenfolge | bei `correct`, `delete`. Bei `keep` empfohlen |
 | `reason`          | Begründung für die Änderung                                                                       | bei `correct`, `delete`, `unverifiable`                   |
 
 ## 8.2 Gemeinsame `review.csv`
@@ -136,14 +138,15 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 
 **Mit zweiter Person:**
 
-1. Einarbeitung mit dieser Anweisung und dem Probeartefakt aus Abschnitt 9.1.
+1. Einarbeitung mit dieser Anweisung und dem Probeartefakt (`context/pilot`).
 2. Stichprobe: je Artefakt 20 % der Einheiten, geschichtet nach `unit_type`, mit festem Startwert gezogen.
-3. Die zweite Person erhält Rohartefakt, Belegquellen (inkl. `official.sqlite`) und die Einheitenliste mit `unit_id`, `element` und `original`, **ohne** die Spalten `action`, `corrected`, `evidence` und `reason`.
+3. Die zweite Person erhält Rohartefakt, Belegquellen (inkl. `official.sqlite`) und die Einheitenliste mit `unit_id`, `unit` und `original`, **ohne** die Spalten `action`, `corrected`, `evidence` und `reason`.
 4. Sie entscheidet je Einheit nach dem Entscheidungsbaum.
 5. **NOCH OFFEN:** Ausgewertet werden prozentuale Übereinstimmung und Cohens Kappa auf der Spalte `action` (Cohen, 1960), gesamt und je Artefakttyp.
 6. Abweichende Entscheidungen werden berichtet und qualitativ eingeordnet. Die geprüften Artefakte bleiben unverändert; maßgeblich ist die Erstprüfung. Das verhindert, dass die Kontexte im Nachhinein angepasst werden.
 
 **Ohne zweite Person (Rückfalloption):** Die prüfende Person prüft dieselbe Stichprobe nach frühestens einer Woche erneut, ohne Einsicht in die eigenen Entscheidungen, und berichtet die Intra-Rater-Übereinstimmung. Das ist schwächer als eine Zweitprüfung und wird als Limitation benannt.
+
 ## 10 Kennzahlen aus dem Protokoll
 
 Je Modell und Artefakt (berechnet mit `src/effort.py`, rein deskriptiv):
@@ -155,4 +158,4 @@ Je Modell und Artefakt (berechnet mit `src/effort.py`, rein deskriptiv):
 | Abdeckung B                 | beschriebene Spalten nach der Prüfung / alle Spalten der DDL                    |
 | Abdeckung C                 | Beziehungen nach der Prüfung / Referenzbeziehungen aus der DDL                  |
 | Prüfzeit                    | Minuten je Artefakt                                                             |
-| NOCH OFFEN: Übereinstimmung | Prozent und Cohens Kappa aus Abschnitt 10                                       |
+| NOCH OFFEN: Übereinstimmung | Prozent und Cohens Kappa aus Abschnitt 9                                       |
