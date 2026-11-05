@@ -1,0 +1,48 @@
+# Prefix: http://data.world/schema/insurance/
+# domain = class the property belongs to (subject)
+# range  = target class (relationship) or datatype (attribute)
+
+CLASSES (name | label)
+Agent | Agent
+Catastrophe | Catastrophe
+Claim | Claim
+ExpensePayment | Expense Payment
+ExpenseReserve | Expense Reserve
+LossPayment | Loss Payment
+LossReserve | Loss Reserve
+Policy | Policy
+PolicyCoverageDetail | Policy Coverage Detail
+PolicyHolder | Policy Holder
+Premium | Premium
+
+RELATIONSHIPS (name | label | domain -> range)
+against | against | Claim -> PolicyCoverageDetail
+hasCatastrophe | has catastrophe | Claim -> Catastrophe
+hasExpensePayment | has expense payment | Claim -> ExpensePayment
+hasExpenseReserve | has expense reserve | Claim -> ExpenseReserve
+hasLossPayment | has loss payment | Claim -> LossPayment
+hasLossReserve | has loss reserve | Claim -> LossReserve
+hasPolicy | has policy | PolicyCoverageDetail -> Policy
+hasPolicyHolder | has policy holder | Policy -> PolicyHolder
+hasPremiumAmount | has premium amount | PolicyCoverageDetail -> Premium
+soldByAgent | sold by agent | Policy -> Agent
+
+ATTRIBUTES (name | label | domain : datatype)
+agentId | Agent ID | Agent : (untyped)
+catastropheName | Catastrophe Name | Catastrophe : (untyped)
+claimCloseDate | Claim Close Date | Claim : dateTime
+claimNumber | Claim Number | Claim : (untyped)
+claimOpenDate | Claim Open Date | Claim : dateTime
+expensePaymentAmount | Expense Payment Amount | ExpensePayment : (untyped)
+expenseReserveAmount | Expense Reserve Amount | ExpenseReserve : (untyped)
+lossPaymentAmount | Loss Payment Amount | LossPayment : (untyped)
+lossReserveAmount | Loss Reserve Amount | LossReserve : (untyped)
+policyCoverageEffectiveDate | Policy Coverage Effective Date | PolicyCoverageDetail : dateTime
+policyCoverageExpirationDate | Policy Coverage Expiration Date | PolicyCoverageDetail : dateTime
+policyEffectiveDate | Policy Effective Date | Policy : dateTime
+policyExpirationDate | Policy Expiration Date | Policy : dateTime
+policyHolderId | Policy Holder ID | PolicyHolder : (untyped)
+policyNumber | Policy Number | Policy : (untyped)
+premiumAmount | Premium Amount | Premium : (untyped)
+premiumAmountMonthly | Premium Amount Monthly | Premium : (untyped)
+premiumPeriod | Premium Period | Premium : (untyped)

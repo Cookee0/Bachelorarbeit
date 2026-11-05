@@ -1,3 +1,4 @@
+## Schema (DDL)
 
 CREATE TABLE Claim
 ( 
@@ -15,7 +16,7 @@ CREATE TABLE Claim
 	Claim_Reopen_Date    datetime  NULL ,
 	Claim_Status_Code    varchar(5)  NULL ,
 	Claim_Reported_Date  datetime  NULL ,
-	 PRIMARY KEY (Claim_Identifier ASC),
+	 PRIMARY KEY (Claim_Identifier  ASC),
 	 FOREIGN KEY (Catastrophe_Identifier) REFERENCES Catastrophe(Catastrophe_Identifier),
  FOREIGN KEY (Claim_Identifier) REFERENCES Claim(Claim_Identifier),
  FOREIGN KEY (Insurable_Object_Identifier) REFERENCES Insurable_Object(Insurable_Object_Identifier),
@@ -153,3 +154,206 @@ CREATE TABLE Catastrophe
 	Company_Catastrophe_Code varchar(20)  NULL ,
 	 PRIMARY KEY (Catastrophe_Identifier ASC)
 )
+
+## Sample data
+
+### Agreement_Party_Role
+ Agreement_Identifier  Party_Identifier Party_Role_Code Effective_Date Expiration_Date
+                    1                 1              PH           None            None
+                    1                 2              AG           None            None
+                    2                 1              PH           None            None
+
+Agreement_Party_Role.Agreement_Identifier distinct values: [1, 2]
+
+Agreement_Party_Role.Party_Identifier distinct values: [1, 2]
+
+Agreement_Party_Role.Party_Role_Code distinct values: ['AG', 'PH']
+
+Agreement_Party_Role.Effective_Date distinct values: [None]
+
+Agreement_Party_Role.Expiration_Date distinct values: [None]
+
+### Catastrophe
+ Catastrophe_Identifier Catastrophe_Type_Code Catastrophe_Name Industry_Catastrophe_Code Company_Catastrophe_Code
+                      1                  None        Hurricane                      None                     None
+                      2                  None          Tornado                      None                     None
+                      3                  None            Flood                      None                     None
+
+Catastrophe.Catastrophe_Identifier distinct values: [1, 2, 3, 4]
+
+Catastrophe.Catastrophe_Type_Code distinct values: [None]
+
+Catastrophe.Catastrophe_Name distinct values: ['Fire', 'Flood', 'Hurricane', 'Tornado']
+
+Catastrophe.Industry_Catastrophe_Code distinct values: [None]
+
+Catastrophe.Company_Catastrophe_Code distinct values: [None]
+
+### Claim
+ Claim_Identifier  Catastrophe_Identifier Claim_Description Claims_Made_Date Company_Claim_Number Company_Subclaim_Number  Insurable_Object_Identifier  Occurrence_Identifier Entry_Into_Claims_Made_Program_Date Claim_Open_Date Claim_Close_Date Claim_Reopen_Date Claim_Status_Code Claim_Reported_Date
+                1                       4              None             None             12312701                    None                            1                      1                                None      2019-01-15       2019-01-31              None              None                None
+                2                       4              None             None             12312702                    None                            2                      2                                None      2019-06-02       2019-06-27              None              None                None
+
+Claim.Claim_Identifier distinct values: [1, 2]
+
+Claim.Catastrophe_Identifier distinct values: [4]
+
+Claim.Claim_Description distinct values: [None]
+
+Claim.Claims_Made_Date distinct values: [None]
+
+Claim.Company_Claim_Number distinct values: ['12312701', '12312702']
+
+Claim.Company_Subclaim_Number distinct values: [None]
+
+Claim.Insurable_Object_Identifier distinct values: [1, 2]
+
+Claim.Occurrence_Identifier distinct values: [1, 2]
+
+Claim.Entry_Into_Claims_Made_Program_Date distinct values: [None]
+
+Claim.Claim_Open_Date distinct values: ['2019-01-15', '2019-06-02']
+
+Claim.Claim_Close_Date distinct values: ['2019-01-31', '2019-06-27']
+
+Claim.Claim_Reopen_Date distinct values: [None]
+
+Claim.Claim_Status_Code distinct values: [None]
+
+Claim.Claim_Reported_Date distinct values: [None]
+
+### Claim_Amount
+ Claim_Amount_Identifier  Claim_Identifier Claim_Offer_Identifier Amount_Type_Code Event_Date  Claim_Amount Insurance_Type_Code
+                       1                 1                   None             None       None          1000                None
+                       2                 1                   None             None       None          1100                None
+                       3                 1                   None             None       None          1200                None
+
+Claim_Amount.Claim_Amount_Identifier distinct values: [1, 2, 3, 4, 5, 6, 7, 8]
+
+Claim_Amount.Claim_Identifier distinct values: [1, 2]
+
+Claim_Amount.Claim_Offer_Identifier distinct values: [None]
+
+Claim_Amount.Amount_Type_Code distinct values: [None]
+
+Claim_Amount.Event_Date distinct values: [None]
+
+Claim_Amount.Claim_Amount distinct values: [1000, 1100, 1200, 1300, 2100, 2200, 2300, 2400]
+
+Claim_Amount.Insurance_Type_Code distinct values: [None]
+
+### Claim_Coverage
+ Claim_Identifier Effective_Date  Policy_Coverage_Detail_Identifier
+                1     2019-01-01                                  5
+                2     2019-01-01                                  5
+
+Claim_Coverage.Claim_Identifier distinct values: [1, 2]
+
+Claim_Coverage.Effective_Date distinct values: ['2019-01-01']
+
+Claim_Coverage.Policy_Coverage_Detail_Identifier distinct values: [5]
+
+### Expense_Payment
+ Claim_Amount_Identifier
+                       4
+                       8
+
+Expense_Payment.Claim_Amount_Identifier distinct values: [4, 8]
+
+### Expense_Reserve
+ Claim_Amount_Identifier
+                       2
+                       6
+
+Expense_Reserve.Claim_Amount_Identifier distinct values: [2, 6]
+
+### Loss_Payment
+ Claim_Amount_Identifier
+                       3
+                       7
+
+Loss_Payment.Claim_Amount_Identifier distinct values: [3, 7]
+
+### Loss_Reserve
+ Claim_Amount_Identifier
+                       1
+                       5
+
+Loss_Reserve.Claim_Amount_Identifier distinct values: [1, 5]
+
+### Policy
+ Policy_Identifier Effective_Date Expiration_Date Policy_Number Status_Code Geographic_Location_Identifier
+                 1     2015-01-01      2019-12-31   31003000336        None                           None
+                 2     2019-06-01      2020-05-31   31003000337        None                           None
+
+Policy.Policy_Identifier distinct values: [1, 2]
+
+Policy.Effective_Date distinct values: ['2015-01-01', '2019-06-01']
+
+Policy.Expiration_Date distinct values: ['2019-12-31', '2020-05-31']
+
+Policy.Policy_Number distinct values: ['31003000336', '31003000337']
+
+Policy.Status_Code distinct values: [None]
+
+Policy.Geographic_Location_Identifier distinct values: [None]
+
+### Policy_Amount
+ Policy_Amount_Identifier Geographic_Location_Identifier  Policy_Identifier Effective_Date Amount_Type_Code Earning_Begin_Date Earning_End_Date  Policy_Coverage_Detail_Identifier  Policy_Amount Insurable_Object_Identifier Insurance_Type_Code
+                        1                           None                  1     2015-01-01              NaN               None             None                                  1        1000000                        None                None
+                        2                           None                  1     2015-01-01             Year               None             None                                  1          15000                        None                None
+                        3                           None                  1     2016-01-01              NaN               None             None                                  2        1000000                        None                None
+
+Policy_Amount.Policy_Amount_Identifier distinct values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+Policy_Amount.Geographic_Location_Identifier distinct values: [None]
+
+Policy_Amount.Policy_Identifier distinct values: [1, 2]
+
+Policy_Amount.Effective_Date distinct values: ['2015-01-01', '2016-01-01', '2017-01-01', '2018-01-01', '2019-01-01', '2019-06-01']
+
+Policy_Amount.Amount_Type_Code distinct values: [None, 'Year']
+
+Policy_Amount.Earning_Begin_Date distinct values: [None]
+
+Policy_Amount.Earning_End_Date distinct values: [None]
+
+Policy_Amount.Policy_Coverage_Detail_Identifier distinct values: [1, 2, 3, 4, 5, 6]
+
+Policy_Amount.Policy_Amount distinct values: [12000, 15000, 16000, 17000, 18000, 20000, 600000, 1000000]
+
+Policy_Amount.Insurable_Object_Identifier distinct values: [None]
+
+Policy_Amount.Insurance_Type_Code distinct values: [None]
+
+### Policy_Coverage_Detail
+Effective_Date  Policy_Coverage_Detail_Identifier Coverage_Identifier  Insurable_Object_Identifier  Policy_Identifier Coverage_Part_Code Coverage_Description Expiration_Date Coverage_Inclusion_Exclusion_Code
+    2015-01-01                                  1                None                            1                  1               None                 None      2015-12-31                              None
+    2016-01-01                                  2                None                            1                  1               None                 None      2016-12-31                              None
+    2017-01-01                                  3                None                            1                  1               None                 None      2017-12-31                              None
+
+Policy_Coverage_Detail.Effective_Date distinct values: ['2015-01-01', '2016-01-01', '2017-01-01', '2018-01-01', '2019-01-01', '2019-06-01']
+
+Policy_Coverage_Detail.Policy_Coverage_Detail_Identifier distinct values: [1, 2, 3, 4, 5, 6]
+
+Policy_Coverage_Detail.Coverage_Identifier distinct values: [None]
+
+Policy_Coverage_Detail.Insurable_Object_Identifier distinct values: [1, 2]
+
+Policy_Coverage_Detail.Policy_Identifier distinct values: [1, 2]
+
+Policy_Coverage_Detail.Coverage_Part_Code distinct values: [None]
+
+Policy_Coverage_Detail.Coverage_Description distinct values: [None]
+
+Policy_Coverage_Detail.Expiration_Date distinct values: ['2015-12-31', '2016-12-31', '2017-12-31', '2018-12-31', '2019-12-31', '2020-05-31']
+
+Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code distinct values: [None]
+
+### Premium
+ Policy_Amount_Identifier
+                        2
+                        4
+                        6
+
+Premium.Policy_Amount_Identifier distinct values: [2, 4, 6, 8, 10, 12]
