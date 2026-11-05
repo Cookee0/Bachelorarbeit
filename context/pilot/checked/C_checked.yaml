@@ -1,0 +1,50 @@
+entities:
+  - name: Claim
+    table: Claim
+    primary_key: [Claim_Identifier]
+    description: A claim is a record of an event or occurrence related to insurance claims.
+    relationships:
+      - name: entity_b_to_entity_a
+        from: {table: Claim_Amount, columns: [Claim_Identifier]}
+        to: {table: Claim, columns: [Claim_Identifier]}
+        cardinality: many_to_one
+  - name: Policy_Coverage_Detail
+    table: Policy_Coverage_Detail
+    description: A policy coverage detail is a record of a specific coverage.
+  - name: Premium
+    table: Premium
+    description: A premium is a payment related to a policy.
+    relationships:
+      - name: entity_b_to_entity_a
+        from: {table: Premium, columns: [Policy_Amount_Identifier]}
+        to: {table: Policy_Amount, columns: [Policy_Amount_Identifier]}
+        cardinality: one_to_one
+  - name: Claim_Coverage
+    table: Claim_Coverage
+    description: A claim has a policy coverage detail.
+    relationships:
+      - name: entity_b_to_entity_a
+        from: {table: Claim_Coverage, columns: [Effective_Date, Policy_Coverage_Detail_Identifier]}
+        to: {table: Policy_Coverage_Detail, columns: [Effective_Date, Policy_Coverage_Detail_Identifier]}
+        cardinality: many_to_one
+  - name: Expense_Payment
+    table: Expense_Payment
+    description: A payment is associated with an expense.
+  - name: Loss_Payment
+    table: Loss_Payment
+    description: A payment is associated with a loss.
+  - name: Expense_Reserve
+    table: Expense_Reserve
+    description: A reserve is associated with an expense.
+  - name: Loss_Reserve
+    table: Loss_Reserve
+    description: A reserve is associated with a loss.
+  - name: Policy
+    table: Policy
+    description: A policy is a contract with an insurance company.
+  - name: Claim_Amount
+    table: Claim_Amount
+    description: A claim has an amount.
+  - name: Policy_Amount
+    table: Policy_Amount
+    description: A policy has an amount.
