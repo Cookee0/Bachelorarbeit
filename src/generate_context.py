@@ -1,3 +1,4 @@
+import os
 import sys
 
 import ollama
@@ -5,9 +6,9 @@ import ollama
 from db import ROOT
 
 MODELS = {
-    "1.7b": "qwen3:1.7b-8k-nothink-Temp0",
-    "4b": "qwen3:4b-8k-nothink-Temp0",
-    "8b": "qwen3:8b-8k-nothink-Temp0",
+    "1.7": "qwen3:1.7b-8k-nothink-Temp0",
+    "4": "qwen3:4b-8k-nothink-Temp0",
+    "8": "qwen3:8b-8k-nothink-Temp0",
     "pilot": "qwen3:0.6b",
 }  # pilot: review-protocol test only
 OPTS = {
@@ -52,5 +53,11 @@ print(
 if r["prompt_eval_count"] >= OPTS["num_ctx"] - 256:
     print("WARNING: prompt probably truncated")
 ext = "md" if artefact == "B" else "yaml"
-with open(f"{ROOT}/context/{key}/{artefact}_raw.{ext}", "w", encoding="utf-8") as file:
-    file.write(r["message"]["content"])
+
+if os.path.exists(f"{ROOT}/context/{key}/raw/"):
+    with open(f"{ROOT}/context/{key}/raw/{artefact}_raw.{ext}", "w", encoding="utf-8") as file:
+        file.write(r["message"]["content"])
+else:
+    os.mkdir(f"{ROOT}/context/{key}/raw/")
+    with open(f"{ROOT}/context/{key}/raw/{artefact}_raw.{ext}", "w", encoding="utf-8") as file:
+            file.write(r["message"]["content"])
