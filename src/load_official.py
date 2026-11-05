@@ -1,3 +1,5 @@
+# Load the data from CSV and DDL into an SQLite DB.
+
 import csv
 import sqlite3
 
