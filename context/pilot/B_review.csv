@@ -1,67 +1,67 @@
-unit_id,unit,artefact,unit_type,action,original,corrected,evidence_source,evidence,reason
-1,Claim,B,table,keep,,,ddl,Claim,
-2,Claim_Identifier,B,column,keep,Unique identifier for claims.,,data,SELECT COUNT(Claim_Identifier) FROM Claim,
-3,Catastrophe_Identifier,B,column,delete,Reference to the catastrophe in the Catastrophe table.,,rule,B-Regel F2,Beschreibt einen Verweis auf eine andere Tabelle; B beschreibt nur Spalten.
-4,Claim_Description,B,column,unverifiable,Description of the claim.,,none,Claim.Claim_Description,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-5,Claims_Made_Date,B,column,unverifiable,Date when the claim was made.,,none,Claim.Claims_Made_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-6,Company_Claim_Number,B,column,keep,Number used by the company.,,data,SELECT COUNT(Company_Claim_Number) FROM Claim,
-7,Company_Subclaim_Number,B,column,delete,Subclaim number from the subclaims table.,,ddl,Claim.Company_Subclaim_Number,Referenzierte Tabelle nicht vorhanden.
-8,Insurable_Object_Identifier,B,column,keep,Identifier for the insurable object.,,data,SELECT COUNT(Insurable_Object_Identifier) FROM Claim,
-9,Occurrence_Identifier,B,column,keep,Identifier for the occurrence of the claim.,,data,SELECT COUNT(Occurrence_Identifier) FROM Claim,
-10,Entry_Into_Claims_Made_Program_Date,B,column,keep,Date when the claim was entered into the program.,,ddl,Claim.Entry_Into_Claims_Made_Program_Date,
-11,Claim_Open_Date,B,column,keep,Date when the claim opens.,,data,SELECT COUNT(Claim_Open_Date) FROM Claim,
-12,Claim_Close_Date,B,column,keep,Date when the claim closes.,,data,SELECT COUNT(Claim_Close_Date) FROM Claim,
-13,Claim_Reopen_Date,B,column,keep,Date when the claim reopens.,,ddl,Claim.Claim_Reopen_Date,
-14,Claim_Status_Code,B,column,keep,Status code for the claim.,,ddl,Claim.Claim_Status_Code,
-15,Claim_Reported_Date,B,column,keep,Date when the claim was reported.,,ddl,Claim.Claim_Reported_Date,
-16,Claim_Amount,B,table,keep,,,ddl,Claim_Amount,
-17,Claim_Amount_Identifier,B,column,keep,Unique identifier for the amount.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Claim_Amount,
-18,Claim_Identifier,B,column,keep,Identifier of the claim.,,data,SELECT COUNT(Claim_Identifier) FROM Claim_Amount,
-19,Claim_Offer_Identifier,B,column,keep,Identifier of the offer related to the claim.,,ddl,Claim_Amount.Claim_Offer_Identifier,
-20,Amount_Type_Code,B,column,unverifiable,Code for the amount type.,,none,Claim_Amount.Amount_Type_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-21,Event_Date,B,column,keep,Date when the event occurred.,,ddl,Claim_Amount.Event_Date,
-22,Claim_Amount,B,column,keep,Amount in decimal format.,,data,SELECT COUNT(Claim_Amount) FROM Claim_Amount,
-23,Insurance_Type_Code,B,column,keep,Code for the insurance type.,,ddl,Claim_Amount.Insurance_Type_Code,
-24,Claim_Coverage,B,table,keep,,,ddl,Claim_Coverage,
-25,Claim_Identifier,B,column,keep,Identifier for the claim.,,data,SELECT COUNT(Claim_Identifier) FROM Claim_Coverage,
-26,Effective_Date,B,column,keep,Date when the policy coverage starts.,,data,SELECT COUNT(Effective_Date) FROM Claim_Coverage,
-27,Policy_Coverage_Detail_Identifier,B,column,keep,Identifier of the policy coverage detail.,,data,SELECT COUNT(Policy_Coverage_Detail_Identifier) FROM Claim_Coverage,
-28,Insurable_Object_Identifier,B,column,keep,Identifier for the insurable object.,,data,SELECT COUNT(Insurable_Object_Identifier) FROM Claim_Coverage,
-29,Expense_Payment,B,table,keep,,,ddl,Expense_Payment,
-30,Claim_Amount_Identifier,B,column,keep,Unique identifier for the payment.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Expense_Payment,
-31,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Expense_Payment table.,,rule,unit_id 30,Element doppelt beschrieben; erste Beschreibung ist unit_id 30.
-32,Expense_Reserve,B,table,keep,,,ddl,Expense_Reserve,
-33,Claim_Amount_Identifier,B,column,keep,Unique identifier for the reserve.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Expense_Reserve,
-34,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Expense_Reserve table.,,rule,unit_id 33,Element doppelt beschrieben; erste Beschreibung ist unit_id 33.
-35,Loss_Payment,B,table,keep,,,ddl,Loss_Payment,
-36,Claim_Amount_Identifier,B,column,keep,Unique identifier for the payment.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Loss_Payment,
-37,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Loss_Payment table.,,rule,unit_id 36,Element doppelt beschrieben; erste Beschreibung ist unit_id 36.
-38,Loss_Reserve,B,table,keep,,,ddl,Loss_Reserve,
-39,Claim_Amount_Identifier,B,column,keep,Unique identifier for the reserve.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Loss_Reserve,
-40,Claim_Amount_Identifier,B,column,delete,Reference to the claim in the Loss_Reserve table.,,rule,unit_id 39,Element doppelt beschrieben; erste Beschreibung ist unit_id 39.
-41,Policy,B,table,keep,,,ddl,Policy,
-42,Policy_Identifier,B,column,keep,Identifier for the policy.,,data,SELECT COUNT(Policy_Identifier) FROM Policy,
-43,Effective_Date,B,column,keep,Date when the policy starts.,,data,SELECT COUNT(Effective_Date) FROM Policy,
-44,Expiration_Date,B,column,keep,Date when the policy ends.,,data,SELECT COUNT(Expiration_Date) FROM Policy,
-45,Policy_Number,B,column,keep,Number of the policy.,,data,SELECT COUNT(Policy_Number) FROM Policy,
-46,Status_Code,B,column,unverifiable,Code for the status of the policy.,,none,Policy.Status_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-47,Geographic_Location_Identifier,B,column,unverifiable,Identifier for the geographic location.,,none,Policy.Geographic_Location_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-48,Policy_Amount,B,table,keep,,,ddl,Policy_Amount,
-49,Policy_Amount_Identifier,B,column,keep,Unique identifier for the amount.,,data,SELECT COUNT(Policy_Amount_Identifier) FROM Policy_Amount,
-50,Geographic_Location_Identifier,B,column,unverifiable,Identifier for the location.,,none,Policy_Amount.Geographic_Location_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-51,Policy_Identifier,B,column,keep,Identifier for the policy.,,data,SELECT COUNT(Policy_Identifier) FROM Policy_Amount,
-52,Effective_Date,B,column,keep,Date when the policy starts.,,data,SELECT COUNT(Effective_Date) FROM Policy_Amount,
-53,Amount_Type_Code,B,column,keep,Code for the amount type.,,data,SELECT COUNT(Amount_Type_Code) FROM Policy_Amount,
-54,Earning_Begin_Date,B,column,unverifiable,Start date of earnings.,,none,Policy_Amount.Earning_Begin_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-55,Earning_End_Date,B,column,unverifiable,End date of earnings.,,none,Policy_Amount.Earning_End_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-56,Policy_Coverage_Detail_Identifier,B,column,keep,Identifier for the coverage detail.,,data,SELECT COUNT(Policy_Coverage_Detail_Identifier) FROM Policy_Amount,
-57,Policy_Coverage_Detail,B,table,keep,,,ddl,Policy_Coverage_Detail,
-58,Effective_Date,B,column,keep,Date when the policy covers.,,data,SELECT COUNT(Effective_Date) FROM Policy_Coverage_Detail,
-59,Policy_Coverage_Detail_Identifier,B,column,keep,Identifier for the policy coverage detail.,,data,SELECT COUNT(Policy_Coverage_Detail_Identifier) FROM Policy_Coverage_Detail,
-60,Coverage_Identifier,B,column,unverifiable,Identifier for the coverage part.,,none,Policy_Coverage_Detail.Coverage_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-61,Insurable_Object_Identifier,B,column,keep,Identifier for the insurable object.,,data,SELECT COUNT(Insurable_Object_Identifier) FROM Policy_Coverage_Detail,
-62,Policy_Identifier,B,column,keep,Identifier for the policy.,,data,SELECT COUNT(Policy_Identifier) FROM Policy_Coverage_Detail,
-63,Coverage_Part_Code,B,column,unverifiable,Code for the coverage part.,,none,Policy_Coverage_Detail.Coverage_Part_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-64,Coverage_Description,B,column,unverifiable,Description of the coverage.,,none,Policy_Coverage_Detail.Coverage_Description,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
-65,Expiration_Date,B,column,keep,Date when the coverage expires.,,data,SELECT COUNT(Expiration_Date) FROM Policy_Coverage_Detail,
-66,Coverage_Inclusion_Exclusion_Code,B,column,unverifiable,Code for inclusion/exclusion.,,none,Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,evidence,reason
+1,B,Claim,table,keep,,,ddl,Claim,
+2,B,Claim_Identifier,column,keep,Unique identifier for claims.,,data,SELECT COUNT(Claim_Identifier) FROM Claim,
+3,B,Catastrophe_Identifier,column,delete,Reference to the catastrophe in the Catastrophe table.,,rule,B-Regel F2,Beschreibt einen Verweis auf eine andere Tabelle; B beschreibt nur Spalten.
+4,B,Claim_Description,column,unverifiable,Description of the claim.,,none,Claim.Claim_Description,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+5,B,Claims_Made_Date,column,unverifiable,Date when the claim was made.,,none,Claim.Claims_Made_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+6,B,Company_Claim_Number,column,keep,Number used by the company.,,data,SELECT COUNT(Company_Claim_Number) FROM Claim,
+7,B,Company_Subclaim_Number,column,delete,Subclaim number from the subclaims table.,,ddl,Claim.Company_Subclaim_Number,Referenzierte Tabelle nicht vorhanden.
+8,B,Insurable_Object_Identifier,column,keep,Identifier for the insurable object.,,data,SELECT COUNT(Insurable_Object_Identifier) FROM Claim,
+9,B,Occurrence_Identifier,column,keep,Identifier for the occurrence of the claim.,,data,SELECT COUNT(Occurrence_Identifier) FROM Claim,
+10,B,Entry_Into_Claims_Made_Program_Date,column,keep,Date when the claim was entered into the program.,,ddl,Claim.Entry_Into_Claims_Made_Program_Date,
+11,B,Claim_Open_Date,column,keep,Date when the claim opens.,,data,SELECT COUNT(Claim_Open_Date) FROM Claim,
+12,B,Claim_Close_Date,column,keep,Date when the claim closes.,,data,SELECT COUNT(Claim_Close_Date) FROM Claim,
+13,B,Claim_Reopen_Date,column,keep,Date when the claim reopens.,,ddl,Claim.Claim_Reopen_Date,
+14,B,Claim_Status_Code,column,keep,Status code for the claim.,,ddl,Claim.Claim_Status_Code,
+15,B,Claim_Reported_Date,column,keep,Date when the claim was reported.,,ddl,Claim.Claim_Reported_Date,
+16,B,Claim_Amount,table,keep,,,ddl,Claim_Amount,
+17,B,Claim_Amount_Identifier,column,keep,Unique identifier for the amount.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Claim_Amount,
+18,B,Claim_Identifier,column,keep,Identifier of the claim.,,data,SELECT COUNT(Claim_Identifier) FROM Claim_Amount,
+19,B,Claim_Offer_Identifier,column,keep,Identifier of the offer related to the claim.,,ddl,Claim_Amount.Claim_Offer_Identifier,
+20,B,Amount_Type_Code,column,unverifiable,Code for the amount type.,,none,Claim_Amount.Amount_Type_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+21,B,Event_Date,column,keep,Date when the event occurred.,,ddl,Claim_Amount.Event_Date,
+22,B,Claim_Amount,column,keep,Amount in decimal format.,,data,SELECT COUNT(Claim_Amount) FROM Claim_Amount,
+23,B,Insurance_Type_Code,column,keep,Code for the insurance type.,,ddl,Claim_Amount.Insurance_Type_Code,
+24,B,Claim_Coverage,table,keep,,,ddl,Claim_Coverage,
+25,B,Claim_Identifier,column,keep,Identifier for the claim.,,data,SELECT COUNT(Claim_Identifier) FROM Claim_Coverage,
+26,B,Effective_Date,column,keep,Date when the policy coverage starts.,,data,SELECT COUNT(Effective_Date) FROM Claim_Coverage,
+27,B,Policy_Coverage_Detail_Identifier,column,keep,Identifier of the policy coverage detail.,,data,SELECT COUNT(Policy_Coverage_Detail_Identifier) FROM Claim_Coverage,
+28,B,Insurable_Object_Identifier,column,keep,Identifier for the insurable object.,,data,SELECT COUNT(Insurable_Object_Identifier) FROM Claim_Coverage,
+29,B,Expense_Payment,table,keep,,,ddl,Expense_Payment,
+30,B,Claim_Amount_Identifier,column,keep,Unique identifier for the payment.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Expense_Payment,
+31,B,Claim_Amount_Identifier,column,delete,Reference to the claim in the Expense_Payment table.,,rule,unit_id 30,Element doppelt beschrieben; erste Beschreibung ist unit_id 30.
+32,B,Expense_Reserve,table,keep,,,ddl,Expense_Reserve,
+33,B,Claim_Amount_Identifier,column,keep,Unique identifier for the reserve.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Expense_Reserve,
+34,B,Claim_Amount_Identifier,column,delete,Reference to the claim in the Expense_Reserve table.,,rule,unit_id 33,Element doppelt beschrieben; erste Beschreibung ist unit_id 33.
+35,B,Loss_Payment,table,keep,,,ddl,Loss_Payment,
+36,B,Claim_Amount_Identifier,column,keep,Unique identifier for the payment.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Loss_Payment,
+37,B,Claim_Amount_Identifier,column,delete,Reference to the claim in the Loss_Payment table.,,rule,unit_id 36,Element doppelt beschrieben; erste Beschreibung ist unit_id 36.
+38,B,Loss_Reserve,table,keep,,,ddl,Loss_Reserve,
+39,B,Claim_Amount_Identifier,column,keep,Unique identifier for the reserve.,,data,SELECT COUNT(Claim_Amount_Identifier) FROM Loss_Reserve,
+40,B,Claim_Amount_Identifier,column,delete,Reference to the claim in the Loss_Reserve table.,,rule,unit_id 39,Element doppelt beschrieben; erste Beschreibung ist unit_id 39.
+41,B,Policy,table,keep,,,ddl,Policy,
+42,B,Policy_Identifier,column,keep,Identifier for the policy.,,data,SELECT COUNT(Policy_Identifier) FROM Policy,
+43,B,Effective_Date,column,keep,Date when the policy starts.,,data,SELECT COUNT(Effective_Date) FROM Policy,
+44,B,Expiration_Date,column,keep,Date when the policy ends.,,data,SELECT COUNT(Expiration_Date) FROM Policy,
+45,B,Policy_Number,column,keep,Number of the policy.,,data,SELECT COUNT(Policy_Number) FROM Policy,
+46,B,Status_Code,column,unverifiable,Code for the status of the policy.,,none,Policy.Status_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+47,B,Geographic_Location_Identifier,column,unverifiable,Identifier for the geographic location.,,none,Policy.Geographic_Location_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+48,B,Policy_Amount,table,keep,,,ddl,Policy_Amount,
+49,B,Policy_Amount_Identifier,column,keep,Unique identifier for the amount.,,data,SELECT COUNT(Policy_Amount_Identifier) FROM Policy_Amount,
+50,B,Geographic_Location_Identifier,column,unverifiable,Identifier for the location.,,none,Policy_Amount.Geographic_Location_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+51,B,Policy_Identifier,column,keep,Identifier for the policy.,,data,SELECT COUNT(Policy_Identifier) FROM Policy_Amount,
+52,B,Effective_Date,column,keep,Date when the policy starts.,,data,SELECT COUNT(Effective_Date) FROM Policy_Amount,
+53,B,Amount_Type_Code,column,keep,Code for the amount type.,,data,SELECT COUNT(Amount_Type_Code) FROM Policy_Amount,
+54,B,Earning_Begin_Date,column,unverifiable,Start date of earnings.,,none,Policy_Amount.Earning_Begin_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+55,B,Earning_End_Date,column,unverifiable,End date of earnings.,,none,Policy_Amount.Earning_End_Date,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+56,B,Policy_Coverage_Detail_Identifier,column,keep,Identifier for the coverage detail.,,data,SELECT COUNT(Policy_Coverage_Detail_Identifier) FROM Policy_Amount,
+57,B,Policy_Coverage_Detail,table,keep,,,ddl,Policy_Coverage_Detail,
+58,B,Effective_Date,column,keep,Date when the policy covers.,,data,SELECT COUNT(Effective_Date) FROM Policy_Coverage_Detail,
+59,B,Policy_Coverage_Detail_Identifier,column,keep,Identifier for the policy coverage detail.,,data,SELECT COUNT(Policy_Coverage_Detail_Identifier) FROM Policy_Coverage_Detail,
+60,B,Coverage_Identifier,column,unverifiable,Identifier for the coverage part.,,none,Policy_Coverage_Detail.Coverage_Identifier,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+61,B,Insurable_Object_Identifier,column,keep,Identifier for the insurable object.,,data,SELECT COUNT(Insurable_Object_Identifier) FROM Policy_Coverage_Detail,
+62,B,Policy_Identifier,column,keep,Identifier for the policy.,,data,SELECT COUNT(Policy_Identifier) FROM Policy_Coverage_Detail,
+63,B,Coverage_Part_Code,column,unverifiable,Code for the coverage part.,,none,Policy_Coverage_Detail.Coverage_Part_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+64,B,Coverage_Description,column,unverifiable,Description of the coverage.,,none,Policy_Coverage_Detail.Coverage_Description,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+65,B,Expiration_Date,column,keep,Date when the coverage expires.,,data,SELECT COUNT(Expiration_Date) FROM Policy_Coverage_Detail,
+66,B,Coverage_Inclusion_Exclusion_Code,column,unverifiable,Code for inclusion/exclusion.,,none,Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.

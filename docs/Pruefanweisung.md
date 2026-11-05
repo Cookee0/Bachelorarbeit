@@ -35,19 +35,19 @@ Jede Änderung wird in einem eigenen Prüfprotokoll `{artefakt}_review.csv` und 
 
 Eine Prüfeinheit ist eine Aussage über ein Element.
 
-| Artefakt | Einheitentyp (`unit_type`) | Eine Einheit ist                                                    | Benennung (`element`)                     |
+| Artefakt | Einheitentyp (`unit_type`) | Eine Einheit ist                                                    | Benennung (`unit`)                        |
 | -------- | -------------------------- | ------------------------------------------------------------------- | ----------------------------------------- |
 | B        | `table`                    | die Beschreibung einer Tabelle                                      | `claim`                                   |
 | B        | `column`                   | die Beschreibung einer Spalte                                       | `claim.claim_open_date`                   |
 | B        | `code`                     | die Bedeutung eines Codewertes                                      | `Agreement_Party_Role.Party_Role_Code=PH` |
-| C        | `entity`                   | eine Entität mit Name, zugeordneter Tabelle und Schlüssel           | `entity:Claim`                            |
+| C        | `entity`                   | eine Entität mit Name, zugeordneter Tabelle, Schlüssel und Beschreibung           | `entity:Claim`                            |
 | C        | `relationship`             | eine Beziehung mit beiden Enden, Join-Spalten und ggf. Kardinalität | `rel:claim->policy`                       |
 | C        | `metric`                   | eine Kennzahl mit Formel, Filtern und Granularität                  | `metric:total_loss_amount`                |
 
 ### 4.2 Zerlegungsregeln
 
 - Enthält eine Spaltenbeschreibung Codebedeutungen, wird jeder Codewert als eigene Einheit (`code`) geführt. Die Spaltenbeschreibung selbst wird als `column` geführt.
-- Eine Kennzahl wird als **eine** Einheit geprüft. Ist ein Bestandteil (Formel, Filter, Granularität) widerlegt, gilt die ganze Einheit als falsch.
+- Eine Kennzahl wird als eine Einheit geprüft. Ist ein Bestandteil (Formel, Filter, Granularität) widerlegt, gilt die ganze Einheit als falsch.
 - Text, der nicht zur Beschreibung der Tabellen dient (Einleitungen, Überschriften, Hinweise des LLM) ist keine Prüfeinheit. Sie werden sofort gelöscht.
 
 ## 5 Ablauf
@@ -63,7 +63,7 @@ Eine Prüfeinheit ist eine Aussage über ein Element.
 | Schritt | Tätigkeit                                                                                                                                                                                                                 | Ergebnis                             |
 | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | 1       | Zeitmessung starten. `*_raw.*` nach `*_checked.*` kopieren. Die Rohdatei wird nie bearbeitet.                                                                                                                             | Kopie der Rohdatei                   |
-| 2       | Artefakt vollständig in Einheiten zerlegen. Jede Einheit mit `unit_id`, `artefact`, `unit_type`, `element`, `action`, `original`, `evidence_source`, `evidence` und `reason` in `*_units.csv` eintragen.                  | Liste aller Einheiten                |
+| 2       | Artefakt vollständig in Einheiten zerlegen. Jede Einheit mit `unit_id`, `artefact`, `unit`, `unit_type`, `action`, `original`, `evidence_source`, `evidence` und `reason` in `*_units.csv` eintragen.                  | Liste aller Einheiten                |
 | 3       | Jede Einheit nach dem Entscheidungsbaum ([[#6 Entscheidungsbaum]]) prüfen. Aktion, Beleg und Begründung eintragen.                                                                                                        | Ausgefülltes Protokoll               |
 | 4       | Korrekturen und Löschungen exakt wie protokolliert in `*_checked.*` umsetzen.                                                                                                                                             | Geprüfte Datei                       |
 | 5       | Nur C: YAML-Gültigkeit prüfen (`yaml.safe_load`). Bei Fehlern ausschließlich syntaktisch reparieren und als `syntax` protokollieren (Abschnitt 7).                                                                        | Parsbare Datei                       |
@@ -93,6 +93,7 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | Beschreibung nennt eine andere Tabelle oder bezeichnet die Spalte als Fremdschlüssel (B beschreibt nur Spalten, keine Beziehungen) | Nennung bzw. Fremdschlüssel-Aussage streichen (F2). Bleibt eine belegbare Aussage übrig, nur den Teil streichen, sonst ganz löschen. | `correct` bzw. `delete`                            |
 | DDL enthält Fremdschlüssel auf nicht existierende Tabelle, die Beschreibung nennt sie nicht | Die Zieltabelle ist keine Belegquelle. Die Einheit wird nur danach beurteilt, ob ihr eigener Inhalt gestützt ist (F5). | `keep` / `unverifiable`                            |
 | Beschreibung wiederholt nur den Spaltennamen                                               | Durch die Existenz der Spalte in der DDL gestützt (F5)                                     | `keep`, Quelle `ddl`                               |
+| Nur C: Der DDL-Fremdschlüssel einer Beziehung verweist auf eine Tabelle, die es in der DDL nicht gibt (`declared_target_not_in_db`), die Beziehung im Artefakt nennt eine andere Zieltabelle | Eine Korrektur würde auf eine nicht vorhandene Tabelle verweisen und SQL-Abfragen fehlschlagen lassen. Die Einheit wird nicht korrigiert, sondern gelöscht. | `delete` |
 | Beziehung ohne Fremdschlüssel in der DDL                                                   | Bestätigt, wenn in `reference_relationships.csv` enthalten. Ansonsten nicht verifizierbar. | `keep` / `unverifiable`                            |
 | Kardinalität angegeben (1:1, 1:n)                                                          | Nur über DDL verifizierbar                                                                 | `keep`, `delete`, `correct` nach Entscheidungsbaum |
 | Kennzahl mit plausibler, aber nicht belegter Formel                                        | Weder bestätigt noch widerlegt                                                             | `unverifiable`                                     |
@@ -112,11 +113,12 @@ Jede Einheit durchläuft die Fragen der Reihe nach. Die erste zutreffende Antwor
 | ----------------- | ------------------------------------------------------------------------------------------------- | ----------------------- |
 | `unit_id`         | fortlaufend je Artefakt                                                                           | immer                   |
 | `artefact`        | `B` oder `C`                                                                                      | immer                   |
+| `unit`            | Benennung der Einheit (Tabelle, Spalte, Spalte=Code, Entität, Beziehung, Kennzahl), siehe 4.1      | immer                   |
 | `unit_type`       | `table`, `column`, `code`, `entity`, `relationship`, `metric`                                     | immer                   |
 | `action`          | `keep`, `correct`, `delete`, `unverifiable`, `syntax`                                             | immer                   |
 | `original`        | Wortlaut der Einheit im Rohartefakt                                                               | immer                   |
 | `corrected`       | Wortlaut nach der Prüfung (leer bei `delete`)                                                     | bei `correct`, `syntax` |
-| `evidence_source` | `ddl`, `data`, `ontology`, `rule`, `none` | immer                   |
+| `evidence_source` | `ddl`, `data`, `ontology`, `relationship`, `rule`, `none`; mehrere Quellen mit `;` trennen | immer                   |
 | `evidence`        | DDL-Zeile (`Tabelle.Spalte`), SQL-Abfrage im Wortlaut (auf `official.sqlite`), Verweis auf `unit_id` | bei `correct`, `delete`. Bei `keep` empfohlen |
 | `reason`          | Begründung für die Änderung                                                                       | bei `correct`, `delete`, `unverifiable`                   |
 

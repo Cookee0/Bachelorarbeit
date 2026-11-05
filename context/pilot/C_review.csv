@@ -1,0 +1,95 @@
+unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,evidence,reason
+1,C,entity:Claim,entity,unverifiable,"name: Claim
+    table: Claim
+    primary_key: [Claim_Identifier]
+    description: A claim is a record of an event or occurrence related to insurance claims.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+2,C,rel:Claim->Claim_Amount,relationship,correct,"name: entity_b_to_entity_a
+        from: {table: Claim, columns: [Claim_Identifier]}
+        to: {table: Claim_Amount, columns: [Claim_Identifier]}
+        cardinality: many_to_one","name: entity_b_to_entity_a
+        from: {table: Claim_Amount, columns: [Claim_Identifier]}
+        to: {table: Claim, columns: [Claim_Identifier]}
+        cardinality: many_to_one",relationship;ddl,reference_relationships.csv Line 3;DDL Line 36,"Der Fremdschlüssel liegt bei Claim_Amount (Claim_Amount.Claim_Identifier -> Claim.Claim_Identifier). Richtung von from/to vertauscht, damit many_to_one stimmt."
+3,C,entity:Policy_Coverage_Detail,entity,unverifiable,"name: Policy_Coverage_Detail
+    table: Policy_Coverage_Detail
+    description: A policy coverage detail is a record of a specific coverage.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+4,C,rel:Policy_Coverage_Detail->Claim_Coverage,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
+        to: {table: Claim_Coverage, columns: [Claim_Identifier]}
+        cardinality: many_to_one",,"relationship;ddl","reference_relationships.csv Line 5; DDL Line 74; unit_id 8","Der Fremdschlüssel liegt bei Claim_Coverage (Claim_Coverage(Effective_Date, Policy_Coverage_Detail_Identifier) -> Policy_Coverage_Detail). Die Beschreibung ist umgekehrt und die Join-Spalten stimmen nicht. Sie entspricht damit Unit 8 in umgekehrter Richtung (Duplikat); s. Prüfanweisung Abschnitt 7 ""Element doppelt beschrieben"""
+5,C,entity:Premium,entity,unverifiable,"name: Premium
+    table: Premium
+    description: A premium is a payment related to a policy.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+6,C,rel:Premium->Policy_Amount,relationship,correct,"name: entity_b_to_entity_a
+        from: {table: Premium, columns: [Policy_Amount_Identifier]}
+        to: {table: Policy_Amount, columns: [Policy_Amount_Identifier]}
+        cardinality: many_to_one","name: entity_b_to_entity_a
+        from: {table: Premium, columns: [Policy_Amount_Identifier]}
+        to: {table: Policy_Amount, columns: [Policy_Amount_Identifier]}
+        cardinality: one_to_one",relationship;ddl,reference_relationships.csv Line 8; DDL Line 143+144,"Die Fremdschlüsselspalte Policy_Amount_Identifier ist in Premium zugleich der Primärschlüssel. Pro Policy_Amount gibt es damit höchstens eine Premium-Zeile, many_to_one ist daher ausgeschlossen."
+7,C,entity:Claim_Coverage,entity,unverifiable,"name: Claim_Coverage
+    table: Claim_Coverage
+    description: A claim has a policy coverage detail.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+8,C,rel:Claim_Coverage->Policy_Coverage_Detail,relationship,correct,"name: entity_b_to_entity_a
+        from: {table: Claim_Coverage, columns: [Claim_Identifier]}
+        to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
+        cardinality: many_to_one","name: entity_b_to_entity_a
+        from: {table: Claim_Coverage, columns: [Effective_Date, Policy_Coverage_Detail_Identifier]}
+        to: {table: Policy_Coverage_Detail, columns: [Effective_Date, Policy_Coverage_Detail_Identifier]}
+        cardinality: many_to_one",relationship;ddl,reference_relationships.csv Line 5; DDL Line 74,"Der Fremdschlüssel lautet Claim_Coverage(Effective_Date, Policy_Coverage_Detail_Identifier) -> Policy_Coverage_Detail(Effective_Date, Policy_Coverage_Detail_Identifier). Claim_Identifier gehört zum Fremdschlüssel auf Claim, und Effective_Date fehlte."
+9,C,entity:Expense_Payment,entity,unverifiable,"name: Expense_Payment
+    table: Expense_Payment
+    description: A payment is associated with an expense.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+10,C,rel:Expense_Payment->Claim_Amount,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Expense_Payment, columns: [Claim_Amount_Identifier]}
+        to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+        cardinality: many_to_one",,ddl,DDL Line 57; reference_relationships.csv Line 15,"Der Fremdschlüssel verweist auf Claim_Payment statt Claim_Amount. Claim_Payment existiert in der DDL nicht (declared_target_not_in_db). Eine Korrektur würde auf eine nicht vorhandene Tabelle verweisen und SQL-Abfragen fehlschlagen lassen. s. Prüfanweisung Abschnitt 7."
+11,C,entity:Loss_Payment,entity,unverifiable,"name: Loss_Payment
+    table: Loss_Payment
+    description: A payment is associated with a loss.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+12,C,rel:Loss_Payment->Claim_Amount,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Loss_Payment, columns: [Claim_Amount_Identifier]}
+        to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+        cardinality: many_to_one",,ddl,DDL Line 43; reference_relationships.csv Line 17,"Der Fremdschlüssel verweist auf Claim_Payment statt Claim_Amount. Claim_Payment existiert in der DDL nicht (declared_target_not_in_db). Eine Korrektur würde auf eine nicht vorhandene Tabelle verweisen und SQL-Abfragen fehlschlagen lassen. s. Prüfanweisung Abschnitt 7."
+13,C,entity:Expense_Reserve,entity,unverifiable,"name: Expense_Reserve
+    table: Expense_Reserve
+    description: A reserve is associated with an expense.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+14,C,rel:Expense_Reserve->Claim_Amount,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Expense_Reserve, columns: [Claim_Amount_Identifier]}
+        to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+        cardinality: many_to_one",,ddl,DDL Line 64; reference_relationships.csv Line 16,"Der Fremdschlüssel verweist auf Claim_Reserve statt Claim_Amount. Claim_Reserve existiert in der DDL nicht (declared_target_not_in_db). Eine Korrektur würde auf eine nicht vorhandene Tabelle verweisen und SQL-Abfragen fehlschlagen lassen. s. Prüfanweisung Abschnitt 7."
+15,C,entity:Loss_Reserve,entity,unverifiable,"name: Loss_Reserve
+    table: Loss_Reserve
+    description: A reserve is associated with a loss.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+16,C,rel:Loss_Reserve->Claim_Amount,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Loss_Reserve, columns: [Claim_Amount_Identifier]}
+        to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+        cardinality: many_to_one",,ddl,DDL Line 50; reference_relationships.csv Line 18,"Der Fremdschlüssel verweist auf Claim_Reserve statt Claim_Amount. Claim_Reserve existiert in der DDL nicht (declared_target_not_in_db). Eine Korrektur würde auf eine nicht vorhandene Tabelle verweisen und SQL-Abfragen fehlschlagen lassen. s. Prüfanweisung Abschnitt 7."
+17,C,entity:Policy,entity,unverifiable,"name: Policy
+    table: Policy
+    description: A policy is a contract with an insurance company.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+18,C,rel:Policy->Premium,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Policy, columns: [Policy_Identifier]}
+        to: {table: Premium, columns: [Policy_Amount_Identifier]}
+        cardinality: many_to_one",,relationship;ddl,reference_relationships.csv Line 7,"Die Beziehung existiert nur in umgekehrter Richtung (Policy_Amount.Policy_Identifier -> Policy.Policy_Identifier)."
+19,C,entity:Claim_Amount,entity,unverifiable,"name: Claim_Amount
+    table: Claim_Amount
+    description: A claim has an amount.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+20,C,rel:Claim_Amount->Claim_Coverage,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+        to: {table: Claim_Coverage, columns: [Claim_Identifier]}
+        cardinality: many_to_one",,rule,unit_id 2,"Original widerlegt: Der Fremdschlüssel von Claim_Amount zeigt auf Claim (Claim_Identifier), nicht auf Claim_Coverage. Die einzig belegte Fassung entspricht Unit 2 (Duplikat); s. Prüfanweisung Abschnitt 7 ""Element doppelt beschrieben"""
+21,C,entity:Policy_Amount,entity,unverifiable,"name: Policy_Amount
+    table: Policy_Amount
+    description: A policy has an amount.",,none,,Keine Beschreibung in vorliegenden Dokumenten.
+22,C,rel:Policy_Amount->Premium,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Policy_Amount, columns: [Policy_Amount_Identifier]}
+        to: {table: Premium, columns: [Policy_Amount_Identifier]}
+        cardinality: many_to_one",,rule,unit_id 6,"Gleiche Beziehung wie unit 6, nur in umgekehrter Richtung (Duplikat). s. Prüfanweisung Abschnitt 7 ""Element doppelt beschrieben"""
+23,C,entity:Claim_Coverage,entity,delete,"name: Claim_Coverage
+    table: Claim_Coverage
+    description: A claim has a policy coverage detail.",,none,,Duplikat von Unit 7.
+24,C,rel:Claim_Coverage->Policy_Coverage_Detail,relationship,delete,"name: entity_b_to_entity_a
+        from: {table: Claim_Coverage, columns: [Claim_Identifier]}
+        to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
+        cardinality: many_to_one",,rule,unit_id 8,"Identisch mit Unit 8 (Duplikat); s. Prüfanweisung Abschnitt 7 ""Element doppelt beschrieben"""
