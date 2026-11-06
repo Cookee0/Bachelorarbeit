@@ -1,0 +1,80 @@
+unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,evidence,reason
+1,B,Claim,table,keep,## Claim  ,,ddl,DDL Line 2,
+2,B,Claim.Claim_Identifier,column,keep,Unique identifier for a claim.  ,,ddl,DDL Line 18,
+3,B,Claim.Catastrophe_Identifier,column,correct,Reference to the catastrophe event associated with the claim.  ,The catastrophe event associated with the claim.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+4,B,Claim.Claim_Description,column,keep,Description of the claim.  ,,ddl,DDL Line 6,
+5,B,Claim.Claims_Made_Date,column,keep,Date when the claim was made.  ,,ddl,DDL Line 7,
+6,B,Claim.Company_Claim_Number,column,keep,Claim number assigned by the company.  ,,data,SELECT Company_Claim_Number FROM Claim,
+7,B,Claim.Company_Subclaim_Number,column,keep,Subclaim number assigned by the company.  ,,ddl,DDL Line 9,
+8,B,Claim.Insurable_Object_Identifier,column,correct,Reference to the insurable object involved in the claim.  ,The insurable object involved in the claim.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+9,B,Claim.Occurrence_Identifier,column,correct,Reference to the occurrence associated with the claim.  ,The occurrence associated with the claim.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+10,B,Claim.Entry_Into_Claims_Made_Program_Date,column,keep,Date when the claim was entered into the claims made program.  ,,ddl,DDL Line 12,
+11,B,Claim.Claim_Open_Date,column,keep,Date when the claim was opened.  ,,ddl,DDL Line 13,
+12,B,Claim.Claim_Close_Date,column,keep,Date when the claim was closed.  ,,ddl,DDL Line 14,
+13,B,Claim.Claim_Reopen_Date,column,keep,Date when the claim was reopened.  ,,ddl,DDL Line 15,
+14,B,Claim.Claim_Status_Code,column,correct,"Code indicating the status of the claim (e.g., open, closed, reopened).  ","Code indicating the status of the claim (e.g., open).  ",ddl,DDL Line 16,"varchar(5) unterstützt closed, reopened nicht."
+15,B,Claim.Claim_Status_Code=open,code,unverifiable,open,,none,,Bedeutung weder bestätigt noch widerlegt.
+16,B,Claim.Claim_Status_Code=closed,code,delete,closed,,ddl,DDL Line 16,varchar(5) unterstützt closed nicht.
+17,B,Claim.Claim_Status_Code=reopened,code,delete,reopened,,ddl,DDL Line 16,varchar(5) unterstützt reopened nicht.
+18,B,Claim.Claim_Reported_Date,column,keep,Date when the claim was reported. ,,ddl,DDL Line 17,
+19,B,Claim_Amount,table,keep,## Claim_Amount ,,ddl,DDL Line 25,
+20,B,Claim_Amount.Claim_Amount_Identifier,column,keep,Unique identifier for a claim amount.  ,,ddl,DDL Line 34,
+21,B,Claim_Amount.Claim_Identifier,column,correct,Reference to the claim associated with the amount.  ,The claim associated with the amount.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+22,B,Claim_Amount.Claim_Offer_Identifier,column,correct,Reference to the claim offer associated with the amount.  ,The claim offer associated with the amount.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+23,B,Claim_Amount.Amount_Type_Code,column,keep,"Code indicating the type of amount (e.g., payment, reserve).  ",,ddl,DDL Line 30,
+24,B,Claim_Amount.Amount_Type_Code=payment,code,unverifiable,payment,,none,,Bedeutung nicht verifizierbar.
+25,B,Claim_Amount.Amount_Type_Code=reserve,code,unverifiable,reserve,,none,,Bedeutung nicht verifizierbar.
+26,B,Claim_Amount.Event_Date,column,keep,Date when the event related to the amount occurred.  ,,ddl,DDL Line 31,
+27,B,Claim_Amount.Claim_Amount,column,keep,Amount of money involved in the claim.  ,,ddl;data,DDL Line 32;SELECT Claim_Amount FROM Claim_Amount,
+28,B,Claim_Amount.Insurance_Type_Code,column,keep,Code indicating the type of insurance.  ,,ddl,DDL Line 33,
+29,B,Loss_Payment,table,keep,## Loss_Payment  ,,ddl,DDL Line 39,
+30,B,Loss_Payment.Claim_Amount_Identifier,column,correct,Reference to the claim amount associated with a payment.  ,The claim amount associated with a payment.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+31,B,Loss_Reserve,table,keep,## Loss_Reserve,,ddl,DDL Line 46,
+32,B,Loss_Reserve.Claim_Amount_Identifier,column,correct,Reference to the claim amount associated with a reserve.  ,The claim amount associated with a reserve.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+33,B,Expense_Payment,table,keep,## Expense_Payment  ,,ddl,DDL Line 53,
+34,B,Expense_Payment.Claim_Amount_Identifier,column,correct,Reference to the claim amount associated with an expense payment.  ,The claim amount associated with an expense payment.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+35,B,Expense_Reserve,table,keep,## Expense_Reserve  ,,ddl,DDL Line 60,
+36,B,Expense_Reserve.Claim_Amount_Identifier,column,correct,Reference to the claim amount associated with an expense reserve.  ,The claim amount associated with an expense reserve.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+37,B,Claim_Coverage,table,keep,## Claim_Coverage,,ddl,DDL Line 67,
+38,B,Claim_Coverage.Claim_Identifier,column,correct,Reference to the claim associated with coverage.  ,The claim associated with coverage.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+39,B,Claim_Coverage.Effective_Date,column,keep,Date when the coverage became effective.  ,,ddl,DDL Line 70,
+40,B,Claim_Coverage.Policy_Coverage_Detail_Identifier,column,correct,Reference to the policy coverage detail associated with the claim. ,The policy coverage detail associated with the claim.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+41,B,Policy_Coverage_Detail,table,keep,## Policy_Coverage_Detail  ,,ddl,DDL Line 77,
+42,B,Policy_Coverage_Detail.Effective_Date,column,keep,Date when the coverage detail became effective.  ,,ddl,DDL Line 79,
+43,B,Policy_Coverage_Detail.Policy_Coverage_Detail_Identifier,column,correct,Unique identifier for the policy coverage detail.  ,Identifier for the policy coverage detail.  ,ddl,DDL Line 88,"""Unique"" widerlegt. Zusammengesetzter Schlüssel aus Effective_Date und Policy_Coverage_Detail_Identifier."
+44,B,Policy_Coverage_Detail.Coverage_Identifier,column,delete,Reference to the coverage type.  ,,rule,Entscheidungsbaum 2,"Beschreibt einen Verweis auf eine andere Tabelle. ""coverage type"" ist in keiner Quelle belegt, es bleibt keine belegbare Aussage übrig."
+45,B,Policy_Coverage_Detail.Insurable_Object_Identifier,column,correct,Reference to the insurable object associated with the coverage.  ,The insurable object associated with the coverage.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+46,B,Policy_Coverage_Detail.Policy_Identifier,column,correct,Reference to the policy associated with the coverage detail.  ,The policy associated with the coverage detail.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+47,B,Policy_Coverage_Detail.Coverage_Part_Code,column,keep,Code indicating the part of the coverage.  ,,ddl,DDL Line 84,
+48,B,Policy_Coverage_Detail.Coverage_Description,column,keep,Description of the coverage.  ,,ddl,DDL Line 85,
+49,B,Policy_Coverage_Detail.Expiration_Date,column,keep,Date when the coverage expires.  ,,ddl,DDL Line 86,
+50,B,Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code,column,keep,Code indicating whether the coverage is included or excluded.  ,,ddl,DDL Line 87,
+51,B,Policy,table,keep,## Policy  ,,ddl,DDL Line 94,
+52,B,Policy.Policy_Identifier,column,keep,Unique identifier for a policy.  ,,ddl,DDL Line 102,
+53,B,Policy.Effective_Date,column,keep,Date when the policy became effective.  ,,ddl,DDL Line 97,
+54,B,Policy.Expiration_Date,column,keep,Date when the policy expires.  ,,ddl,DDL Line 98,
+55,B,Policy.Policy_Number,column,keep,Number assigned to the policy.  ,,ddl;data,DDL Line 99; SELECT Policy_Number FROM Policy,
+56,B,Policy.Status_Code,column,keep,"Code indicating the status of the policy (e.g., active, inactive).  ",,ddl,DDL Line 100,
+57,B,Policy.Status_Code=active,code,unverifiable,active,,none,,Bedeutung weder bestätigt noch widerlegt.
+58,B,Policy.Status_Code=inactive,code,unverifiable,inactive,,none,,Bedeutung weder bestätigt noch widerlegt.
+59,B,Policy.Geographic_Location_Identifier,column,correct,Reference to the geographic location associated with the policy.  ,The geographic location associated with the policy.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+60,B,Policy_Amount,table,keep,## Policy_Amount  ,,ddl,DDL Line 107,
+61,B,Policy_Amount.Policy_Amount_Identifier,column,keep,Unique identifier for a policy amount.  ,,ddl,DDL Line 120,
+62,B,Policy_Amount.Geographic_Location_Identifier,column,correct,Reference to the geographic location associated with the policy amount.  ,The geographic location associated with the policy amount.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+63,B,Policy_Amount.Policy_Identifier,column,correct,Reference to the policy associated with the amount.  ,The policy associated with the amount.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+64,B,Policy_Amount.Effective_Date,column,keep,Date when the policy amount became effective.  ,,ddl,DDL Line 112,
+65,B,Policy_Amount.Amount_Type_Code,column,correct,"Code indicating the type of amount (e.g., payment, reserve).  ",Code indicating the type of amount.  ,ddl,DDL Line 113,"varchar(5) unterstützt payment, reserve nicht."
+66,B,Policy_Amount.Amount_Type_Code=payment,code,delete,payment,,ddl,DDL Line 113,varchar(5) unterstützt payment nicht.
+67,B,Policy_Amount.Amount_Type_Code=reserve,code,delete,reserve,,ddl,DDL Line 113,varchar(5) unterstützt reserve nicht.
+68,B,Policy_Amount.Earning_Begin_Date,column,keep,Date when earnings begin for the policy amount.  ,,ddl,DDL Line 114,
+69,B,Policy_Amount.Earning_End_Date,column,keep,Date when earnings end for the policy amount.  ,,ddl,DDL Line 115,
+70,B,Policy_Amount.Policy_Coverage_Detail_Identifier,column,correct,Reference to the policy coverage detail associated with the amount.  ,The policy coverage detail associated with the amount.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+71,B,Policy_Amount.Policy_Amount,column,keep,Amount of money involved in the policy.  ,,ddl;data,DDL Line 117; SELECT Policy_Amount FROM Policy_Amount,
+72,B,Policy_Amount.Insurable_Object_Identifier,column,correct,Reference to the insurable object associated with the policy amount. ,The insurable object associated with the policy amount.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+73,B,Policy_Amount.Insurance_Type_Code,column,keep,Code indicating the type of insurance.  ,,ddl,DDL Line 119,
+74,B,Agreement_Party_Role,table,keep,## Agreement_Party_Role,,ddl,DDL Line 127,
+75,B,Agreement_Party_Role.Agreement_Identifier,column,correct,Reference to the agreement associated with the party role.  ,The agreement associated with the party role.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+76,B,Agreement_Party_Role.Party_Identifier,column,correct,Reference to the party involved in the agreement.  ,The party involved in the agreement.  ,rule,Entscheidungsbaum 2,Beschreibt einen Verweis auf eine andere Tabelle.
+77,B,Agreement_Party_Role.Party_Role_Code,column,keep,Code indicating the role of the party in the agreement.  ,,ddl,DDL Line 131,
+78,B,Agreement_Party_Role.Effective_Date,column,keep,Date when the party role became effective.  ,,ddl,DDL Line 132,
+79,B,Agreement_Party_Role.Expiration_Date,column,keep,Date when the party role expires.,,ddl,DDL Line 133,
