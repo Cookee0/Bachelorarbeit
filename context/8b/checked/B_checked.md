@@ -26,7 +26,7 @@
 
 - **Claim_Reopen_Date**: Date when a previously closed claim was reopened for further investigation or processing.
 
-- **Claim_Status_Code**: Code representing the current status of the claim (e.g., open, closed, pending, etc.).
+- **Claim_Status_Code**: Code representing the current status of the claim (e.g., open).
 
 - **Claim_Reported_Date**: Date when the claim was reported to the company by the policyholder or third party.
 
@@ -46,9 +46,9 @@
 
 - **Event_Date**: Date when the amount was recorded or associated with an event (e.g., a payment date or incident date).
 
-- **Claim_Amount**: The actual monetary value of the claim amount (e.g., $1000, $2500, etc.).
+- **Claim_Amount**: The actual monetary value of the claim amount (e.g., 1000, 2500, etc.).
 
-- **Insurance_Type_Code**: Code indicating the type of insurance coverage that applies to this amount (e.g., property, liability, etc.).
+- **Insurance_Type_Code**: Code indicating the type of insurance coverage that applies to this amount.
 
 
 
@@ -92,7 +92,7 @@
 
 - **Effective_Date**: Date when the coverage becomes active or effective for the claim.
 
-- **Policy_Coverage_Detail_Identifier**: Unique identifier for a specific policy coverage detail that applies to this claim.
+- **Policy_Coverage_Detail_Identifier**: Identifier for a specific policy coverage detail that applies to this claim.
 
 
 
@@ -102,13 +102,13 @@
 
 - **Effective_Date**: Date when the coverage becomes active or effective under the policy.
 
-- **Policy_Coverage_Detail_Identifier**: Unique identifier for a specific coverage detail within the policy.
+- **Policy_Coverage_Detail_Identifier**: Identifier for a specific coverage detail within the policy.
 
-- **Coverage_Identifier**: Identifier of the general type of coverage (e.g., property, liability) covered by this detail (if applicable).
+- **Coverage_Identifier**: Identifier of the general type of coverage (e.g., property, liability) covered by this detail.
 
 - **Insurable_Object_Identifier**: Identifier of the insured object or property that is covered under this policy detail.
 
-- **Policy_Identifier**: Unique identifier for the insurance policy to which this coverage detail belongs.
+- **Policy_Identifier**: Identifier for the insurance policy to which this coverage detail belongs.
 
 - **Coverage_Part_Code**: Code indicating a specific part or section of the coverage (e.g., "Part A", "Part B").
 
@@ -144,13 +144,13 @@
 
 - **Policy_Amount_Identifier**: Unique identifier for a specific amount associated with a policy.
 
-- **Geographic_Location_Identifier**: Identifier of the geographic area covered by this policy amount (if applicable).
+- **Geographic_Location_Identifier**: Identifier of the geographic area covered by this policy amount.
 
 - **Policy_Identifier**: Identifier of the insurance policy to which this amount belongs.
 
 - **Effective_Date**: Date when the policy amount becomes active or effective under the policy.
 
-- **Amount_Type_Code**: Code indicating the type of amount, such as premium, loss, expense, etc. (e.g., "Premium" or "Loss").
+- **Amount_Type_Code**: Code indicating the type of amount, such as loss (e.g., "Loss").
 
 - **Earning_Begin_Date**: Start date for earning or accruing this amount (if applicable).
 
@@ -158,11 +158,11 @@
 
 - **Policy_Coverage_Detail_Identifier**: Identifier of the policy coverage detail that applies to this amount.
 
-- **Policy_Amount**: The actual monetary value of the policy amount (e.g., $1000, $2500, etc.).
+- **Policy_Amount**: The actual monetary value of the policy amount (e.g., 1000, 2500, etc.).
 
 - **Insurable_Object_Identifier**: Identifier of the insured object or property covered by this policy amount.
 
-- **Insurance_Type_Code**: Code indicating the type of insurance coverage that applies to this amount (e.g., property, liability, etc.).
+- **Insurance_Type_Code**: Code indicating the type of insurance coverage that applies to this amount.
 
 
 
@@ -170,7 +170,7 @@
 
 
 
-- **Agreement_Identifier**: Unique identifier for an agreement between parties (e.g., a contract or policy agreement).
+- **Agreement_Identifier**: Identifier for an agreement between parties (e.g., a contract or policy agreement).
 
 - **Party_Identifier**: Identifier of the party involved in the agreement.
 

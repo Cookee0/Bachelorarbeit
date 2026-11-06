@@ -1,0 +1,95 @@
+unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,evidence,reason
+1,B,Claim,table,keep,## Claim,,ddl,DDL Line 2,
+2,B,Claim.Claim_Identifier,column,keep,Unique identifier for a claim.,,ddl,DDL Line 18,
+3,B,Claim.Catastrophe_Identifier,column,keep,Identifier of the catastrophe associated with this claim (if any).,,ddl,DDL Line 5,
+4,B,Claim.Claim_Description,column,keep,Description of the claim event or incident.,,ddl,DDL Line 6,
+5,B,Claim.Claims_Made_Date,column,keep,Date when the claim was made by the policyholder.,,ddl,DDL Line 7,
+6,B,Claim.Company_Claim_Number,column,keep,Internal company-assigned number for tracking the claim.,,ddl;data,DDL Line 8; SELECT Company_Claim_Number FROM Claim,
+7,B,Claim.Company_Subclaim_Number,column,keep,Sub-number used to identify a sub-claim under the main claim (if any).,,ddl,DDL Line 9,
+8,B,Claim.Insurable_Object_Identifier,column,unverifiable,Identifier of the insured object or property involved in the claim.,,none,,Beispiele in der Beschreibung sind in keiner Quelle belegt.
+9,B,Claim.Occurrence_Identifier,column,keep,Identifier of the occurrence that led to the claim (if applicable).,,ddl,DDL Line 11,
+10,B,Claim.Entry_Into_Claims_Made_Program_Date,column,keep,Date when the claim was entered into the claims-made program (if any).,,ddl,DDL Line 12,
+11,B,Claim.Claim_Open_Date,column,keep,Date when the claim was officially opened or reported by the company.,,ddl;data,DDL Line 13; SELECT Claim_Open_Date FROM Claim,
+12,B,Claim.Claim_Close_Date,column,keep,"Date when the claim was closed, indicating resolution of the claim event.",,ddl;data,DDL Line 14; SELECT Claim_Close_Date FROM Claim,
+13,B,Claim.Claim_Reopen_Date,column,keep,Date when a previously closed claim was reopened for further investigation or processing.,,ddl,DDL Line 15,
+14,B,Claim.Claim_Status_Code,column,correct,"Code representing the current status of the claim (e.g., open, closed, pending, etc.).","Code representing the current status of the claim (e.g., open).",ddl,DDL Line 16,"varchar(5) unterstützt closed, pending nicht."
+15,B,Claim.Claim_Status_Code=open,code,unverifiable,open,,none,,Bedeutung nicht verifizierbar.
+16,B,Claim.Claim_Status_Code=closed,code,delete,closed,,ddl,DDL Line 16,"varchar(5) unterstützt closed, pending nicht."
+17,B,Claim.Claim_Status_Code=pending,code,delete,pending,,ddl,DDL Line 16,"varchar(5) unterstützt closed, pending nicht."
+18,B,Claim.Claim_Reported_Date,column,keep,Date when the claim was reported to the company by the policyholder or third party.,,ddl,DDL Line 17,
+19,B,Claim_Amount,table,keep,## Claim_Amount,,ddl,DDL Line 25,
+20,B,Claim_Amount.Claim_Amount_Identifier,column,keep,Unique identifier for a specific amount associated with a claim.,,ddl,DDL Line 34,
+21,B,Claim_Amount.Claim_Identifier,column,keep,Identifier of the claim that this amount is related to.,,ddl,DDL Line 28,
+22,B,Claim_Amount.Claim_Offer_Identifier,column,keep,Identifier of any offer made in relation to this claim (if applicable).,,ddl,DDL Line 29,
+23,B,Claim_Amount.Amount_Type_Code,column,keep,"Code indicating the type of amount, such as loss, expense, premium, etc. (e.g., ""Loss"" or ""Expense"").",,ddl,DDL Line 30,
+24,B,Claim_Amount.Amount_Type_Code=Loss,code,unverifiable,Loss,,none,,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+25,B,Claim_Amount.Amount_Type_Code=Expense,code,unverifiable,Expense,,none,,Keine Beispieldaten oder Referenz auf andere Tabellen vorhanden.
+26,B,Claim_Amount.Amount_Type_Code=premium,code,unverifiable,premium,,none,,Bedeutung nicht verifizierbar.
+27,B,Claim_Amount.Event_Date,column,unverifiable,"Date when the amount was recorded or associated with an event (e.g., a payment date or incident date).",,none,,Beispiele in der Beschreibung sind in keiner Quelle belegt.
+28,B,Claim_Amount.Claim_Amount,column,correct,"The actual monetary value of the claim amount (e.g., $1000, $2500, etc.).","The actual monetary value of the claim amount (e.g., 1000, 2500, etc.).",ddl;data,DDL Line 32; SELECT Claim_Amount FROM Claim_Amount,"Claim_Amount ist decimal(15,2) und speichert kein ""$""."
+29,B,Claim_Amount.Insurance_Type_Code,column,correct,"Code indicating the type of insurance coverage that applies to this amount (e.g., property, liability, etc.).",Code indicating the type of insurance coverage that applies to this amount.,ddl,DDL Line 33,"char(1) unterstützt property, liability nicht."
+30,B,Claim_Amount.Insurance_Type_Code=property,code,delete,property,,ddl,DDL Line 33,"char(1) unterstützt property, liability nicht."
+31,B,Claim_Amount.Insurance_Type_Code=liability,code,delete,liability,,ddl,DDL Line 33,"char(1) unterstützt property, liability nicht."
+32,B,Loss_Payment,table,keep,## Loss_Payment,,ddl,DDL Line 39,
+33,B,Loss_Payment.Claim_Amount_Identifier,column,keep,Identifier of the claim amount associated with a loss payment.,,ddl,DDL Line 41,
+34,B,Loss_Reserve,table,keep,## Loss_Reserve,,ddl,DDL Line 46,
+35,B,Loss_Reserve.Claim_Amount_Identifier,column,keep,Identifier of the claim amount associated with a loss reserve.,,ddl,DDL Line 48,
+36,B,Expense_Payment,table,keep,## Expense_Payment,,ddl,DDL Line 53,
+37,B,Expense_Payment.Claim_Amount_Identifier,column,keep,Identifier of the claim amount associated with an expense payment.,,ddl,DDL Line 55,
+38,B,Expense_Reserve,table,keep,## Expense_Reserve,,ddl,DDL Line 60,
+39,B,Expense_Reserve.Claim_Amount_Identifier,column,keep,Identifier of the claim amount associated with an expense reserve.,,ddl,DDL Line 62,
+40,B,Claim_Coverage,table,keep,## Claim_Coverage,,ddl,DDL Line 67,
+41,B,Claim_Coverage.Claim_Identifier,column,keep,Identifier of the claim that this coverage applies to.,,ddl,DDL Line 69,
+42,B,Claim_Coverage.Effective_Date,column,keep,Date when the coverage becomes active or effective for the claim.,,ddl;data,DDL Line 70; SELECT Effective_Date FROM Claim_Coverage,
+43,B,Claim_Coverage.Policy_Coverage_Detail_Identifier,column,correct,Unique identifier for a specific policy coverage detail that applies to this claim.,Identifier for a specific policy coverage detail that applies to this claim.,ddl;data,DDL Line 72; SELECT Policy_Coverage_Detail_Identifier FROM Claim_Coverage,"""Unique"" wird widerlegt durch Datensatz."
+44,B,Policy_Coverage_Detail,table,keep,## Policy_Coverage_Detail,,ddl,DDL Line 77,
+45,B,Policy_Coverage_Detail.Effective_Date,column,keep,Date when the coverage becomes active or effective under the policy.,,ddl,DDL Line 79,
+46,B,Policy_Coverage_Detail.Policy_Coverage_Detail_Identifier,column,correct,Unique identifier for a specific coverage detail within the policy.,Identifier for a specific coverage detail within the policy.,ddl,DDL Line 88,"""Unique"" widerlegt. Zusammengesetzter Schlüssel aus Effective_Date und Policy_Coverage_Detail_Identifier."
+47,B,Policy_Coverage_Detail.Coverage_Identifier,column,correct,"Identifier of the general type of coverage (e.g., property, liability) covered by this detail (if applicable).","Identifier of the general type of coverage (e.g., property, liability) covered by this detail.",ddl,DDL Line 81,"Spalte ist NOT NULL, ""if applicable"" ist widerlegt."
+48,B,Policy_Coverage_Detail.Insurable_Object_Identifier,column,unverifiable,Identifier of the insured object or property that is covered under this policy detail.,,none,,Beispiele in der Beschreibung sind in keiner Quelle belegt.
+49,B,Policy_Coverage_Detail.Policy_Identifier,column,correct,Unique identifier for the insurance policy to which this coverage detail belongs.,Identifier for the insurance policy to which this coverage detail belongs.,ddl;data,"DDL Line 88; SELECT COUNT(*), COUNT(DISTINCT Policy_Identifier) FROM Policy_Coverage_Detail","""Unique"" widerlegt. Nicht Teil des Primärschlüssels, 6 Zeilen mit 2 Werten."
+50,B,Policy_Coverage_Detail.Coverage_Part_Code,column,keep,"Code indicating a specific part or section of the coverage (e.g., ""Part A"", ""Part B"").",,ddl,DDL Line 84,
+51,B,Policy_Coverage_Detail.Coverage_Part_Code=Part A,code,unverifiable,Part A,,none,,Bedeutung nicht verifizierbar.
+52,B,Policy_Coverage_Detail.Coverage_Part_Code=Part B,code,unverifiable,Part B,,none,,Bedeutung nicht verifizierbar.
+53,B,Policy_Coverage_Detail.Coverage_Description,column,keep,Description of what the coverage includes or covers (if available).,,ddl,DDL Line 85,
+54,B,Policy_Coverage_Detail.Expiration_Date,column,keep,Date when the coverage becomes inactive or expires under this policy detail.,,ddl;data,DDL Line 86; SELECT Expiration_Date FROM Policy_Coverage_Detail,
+55,B,Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code,column,keep,"Code indicating whether the coverage is inclusive or exclusive for specific items or conditions (e.g., ""I"" for inclusion, ""E"" for exclusion).",,ddl,DDL Line 87,
+56,B,Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code=I,code,unverifiable,"""I"" for inclusion",,none,,Bedeutung nicht verifizierbar.
+57,B,Policy_Coverage_Detail.Coverage_Inclusion_Exclusion_Code=E,code,unverifiable,"""E"" for exclusion",,none,,Bedeutung nicht verifizierbar.
+58,B,Policy,table,keep,## Policy,,ddl,DDL Line 94,
+59,B,Policy.Policy_Identifier,column,keep,Unique identifier for an insurance policy.,,ddl,DDL Line 102,
+60,B,Policy.Effective_Date,column,keep,Date when the policy becomes active and begins to provide coverage.,,ddl;data,DDL Line 97; SELECT Effective_Date FROM Policy,
+61,B,Policy.Expiration_Date,column,keep,Date when the policy ends and no longer provides coverage (if applicable).,,ddl;data,DDL Line 98; SELECT Expiration_Date FROM Policy,
+62,B,Policy.Policy_Number,column,keep,Internal or external number assigned by the company to identify the policy.,,ddl;data,DDL Line 99; SELECT Policy_Number FROM Policy,
+63,B,Policy.Status_Code,column,keep,"Code indicating the current status of the policy (e.g., ""Active"", ""Inactive"", ""Pending"").",,ddl,DDL Line 100,
+64,B,Policy.Status_Code=Active,code,unverifiable,Active,,none,,Bedeutung nicht verifizierbar.
+65,B,Policy.Status_Code=Inactive,code,unverifiable,Inactive,,none,,Bedeutung nicht verifizierbar.
+66,B,Policy.Status_Code=Pending,code,unverifiable,Pending,,none,,Bedeutung nicht verifizierbar.
+67,B,Policy.Geographic_Location_Identifier,column,keep,Identifier for the geographic location where the policy applies (if applicable).,,ddl,DDL Line 101,
+68,B,Policy_Amount,table,keep,## Policy_Amount,,ddl,DDL Line 107,
+69,B,Policy_Amount.Policy_Amount_Identifier,column,keep,Unique identifier for a specific amount associated with a policy.,,ddl,DDL Line 120,
+70,B,Policy_Amount.Geographic_Location_Identifier,column,correct,Identifier of the geographic area covered by this policy amount (if applicable).,Identifier of the geographic area covered by this policy amount.,ddl,DDL Line 110,"Spalte ist NOT NULL, ""if applicable"" ist widerlegt."
+71,B,Policy_Amount.Policy_Identifier,column,keep,Identifier of the insurance policy to which this amount belongs.,,ddl,DDL Line 111,
+72,B,Policy_Amount.Effective_Date,column,keep,Date when the policy amount becomes active or effective under the policy.,,ddl,DDL Line 112,
+73,B,Policy_Amount.Amount_Type_Code,column,correct,"Code indicating the type of amount, such as premium, loss, expense, etc. (e.g., ""Premium"" or ""Loss"").","Code indicating the type of amount, such as loss (e.g., ""Loss"").",ddl,DDL Line 113,"varchar(5) unterstützt premium, expense nicht."
+74,B,Policy_Amount.Amount_Type_Code=Premium,code,delete,Premium,,ddl,DDL Line 113,varchar(5) unterstützt Premium nicht.
+75,B,Policy_Amount.Amount_Type_Code=Loss,code,unverifiable,Loss,,none,,"""Loss"" passt in varchar(5). Bedeutung nicht verifizierbar."
+76,B,Policy_Amount.Amount_Type_Code=expense,code,delete,expense,,ddl,DDL Line 113,varchar(5) unterstützt expense nicht.
+77,B,Policy_Amount.Earning_Begin_Date,column,keep,Start date for earning or accruing this amount (if applicable).,,ddl,DDL Line 114,
+78,B,Policy_Amount.Earning_End_Date,column,keep,End date for earning or accruing this amount (if applicable).,,ddl,DDL Line 115,
+79,B,Policy_Amount.Policy_Coverage_Detail_Identifier,column,keep,Identifier of the policy coverage detail that applies to this amount.,,ddl,DDL Line 116,
+80,B,Policy_Amount.Policy_Amount,column,correct,"The actual monetary value of the policy amount (e.g., $1000, $2500, etc.).","The actual monetary value of the policy amount (e.g., 1000, 2500, etc.).",ddl;data,DDL Line 117; SELECT Policy_Amount FROM Policy_Amount,"Policy_Amount ist decimal(15,2) und speichert kein ""$""."
+81,B,Policy_Amount.Insurable_Object_Identifier,column,unverifiable,Identifier of the insured object or property covered by this policy amount.,,none,,Beispiele in der Beschreibung sind in keiner Quelle belegt.
+82,B,Policy_Amount.Insurance_Type_Code,column,correct,"Code indicating the type of insurance coverage that applies to this amount (e.g., property, liability, etc.).",Code indicating the type of insurance coverage that applies to this amount.,ddl,DDL Line 119,"char(1) unterstützt property, liability nicht."
+83,B,Policy_Amount.Insurance_Type_Code=property,code,delete,property,,ddl,DDL Line 119,"char(1) unterstützt property, liability nicht."
+84,B,Policy_Amount.Insurance_Type_Code=liability,code,delete,liability,,ddl,DDL Line 119,"char(1) unterstützt property, liability nicht."
+85,B,Agreement_Party_Role,table,keep,## Agreement_Party_Role,,ddl,DDL Line 127,
+86,B,Agreement_Party_Role.Agreement_Identifier,column,correct,"Unique identifier for an agreement between parties (e.g., a contract or policy agreement).","Identifier for an agreement between parties (e.g., a contract or policy agreement).",ddl;data,"DDL Line 134; SELECT COUNT(*), COUNT(DISTINCT Agreement_Identifier) FROM Agreement_Party_Role","""Unique"" widerlegt. Zusammengesetzter Schlüssel, 4 Zeilen mit 2 Werten."
+87,B,Agreement_Party_Role.Party_Identifier,column,keep,Identifier of the party involved in the agreement.,,ddl,DDL Line 130,
+88,B,Agreement_Party_Role.Party_Role_Code,column,keep,"Code indicating the role that the party plays in the agreement (e.g., ""PH"" for Policyholder, ""AG"" for Agent).",,ddl,DDL Line 131,
+89,B,Agreement_Party_Role.Party_Role_Code=PH,code,unverifiable,"""PH"" for Policyholder",,none,,Codewert ohne Definition in der Ontologie.
+90,B,Agreement_Party_Role.Party_Role_Code=AG,code,unverifiable,"""AG"" for Agent",,none,,Codewert ohne Definition in der Ontologie.
+91,B,Agreement_Party_Role.Effective_Date,column,keep,Date when the party's role becomes active or effective under the agreement.,,ddl,DDL Line 132,
+92,B,Agreement_Party_Role.Expiration_Date,column,keep,Date when the party's role ends or expires under the agreement.,,ddl,DDL Line 133,
+93,B,Premium,table,keep,## Premium,,ddl,DDL Line 140,
+94,B,Premium.Policy_Amount_Identifier,column,keep,Identifier of the policy amount associated with a premium payment.,,ddl,DDL Line 142,
