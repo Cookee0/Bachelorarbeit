@@ -1,0 +1,157 @@
+entities:
+
+-   name: Claim
+
+    table: claim
+
+    primary_key: [claim_identifier]
+
+    description: 
+
+  - name: Catastrophe
+
+    table: catastrophe
+
+    primary_key: [catastrophe_identifier]
+
+    description: Identifies the catastrophe that caused the claim.
+
+  - name: Claim_Amount
+
+    table: claim_amount
+
+    primary_key: [claim_amount_identifier]
+
+    description: 
+
+  - name: Loss_Payment
+
+    table: loss_payment
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about payments made to cover losses related to a claim.
+
+  - name: Loss_Reserve
+
+    table: loss_reserve
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about reserves set aside to cover potential future losses related to a claim.
+
+  - name: Expense_Payment
+
+    table: expense_payment
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about payments made for expenses related to a claim.
+
+  - name: Expense_Reserve
+
+    table: expense_reserve
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about reserves set aside for expenses related to a claim.
+
+  - name: Claim_Coverage
+
+    table: claim_coverage
+
+    primary_key: [claim_identifier, effective_date, policy_coverage_detail_identifier]
+
+    description: 
+
+  - name: Policy_Coverage_Detail
+
+    table: policy_coverage_detail
+
+    primary_key: [effective_date, policy_coverage_detail_identifier]
+
+    description: Contains information about coverage details that apply to a policy.
+
+  - name: Policy
+
+    table: policy
+
+    primary_key: [policy_identifier]
+
+    description: 
+
+  - name: Policy_Amount
+
+    table: policy_amount
+
+    primary_key: [policy_amount_identifier]
+
+    description: 
+
+  - name: Agreement_Party_Role
+
+    table: agreement_party_role
+
+    primary_key: [agreement_identifier, party_identifier, party_role_code, effective_date]
+
+    description: 
+
+  - name: Premium
+
+    table: premium
+
+    primary_key: [policy_amount_identifier]
+
+    description: 
+
+
+
+
+relationships:
+
+  - name: claim_to_catastrophe
+
+    from: {table: claim, columns: [catastrophe_identifier]}
+
+    to: {table: catastrophe, columns: [catastrophe_identifier]}
+
+    cardinality: many_to_one
+
+  - name: claim_to_claim_amount
+
+    from: {table: claim_amount, columns: [claim_identifier]}
+
+    to: {table: claim, columns: [claim_identifier]}
+
+    cardinality: many_to_one
+
+  - name: claim_to_claim_coverage
+
+    from: {table: claim_coverage, columns: [claim_identifier]}
+
+    to: {table: claim, columns: [claim_identifier]}
+
+    cardinality: many_to_one
+
+
+metrics:
+
+  - name: claim_amount_total
+
+    description: Total amount of claims.
+
+    formula: SUM(claim_amount.claim_amount)
+
+    filters: ["claim_amount.amount_type_code = 'None'"]
+
+    grain: [claim_amount.claim_amount_identifier]
+
+  - name: policy_amount_total
+
+    description: Total amount of policies.
+
+    formula: SUM(policy_amount.policy_amount)
+
+    filters: ["policy_amount.amount_type_code = 'Year'"]
+
+    grain: [policy_amount.policy_amount_identifier]

@@ -1,0 +1,245 @@
+unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,evidence,reason
+1,C,entity:Claim,entity,correct,"- name: Claim
+
+    table: claim
+
+    primary_key: [claim_identifier]
+
+    description: Unique identifier for each claim. This is the primary key of the table.","- name: Claim
+
+    table: claim
+
+    primary_key: [claim_identifier]
+
+    description: ",ddl,DDL Line 18,"Beschreibt den Primary Key der Tabelle, nicht die Tabelle selbst."
+2,C,entity:Catastrophe,entity,keep,"  - name: Catastrophe
+
+    table: catastrophe
+
+    primary_key: [catastrophe_identifier]
+
+    description: Identifies the catastrophe that caused the claim.",,ontology,Relationships hasCatastrophe,
+3,C,entity:Claim_Amount,entity,correct,"- name: Claim_Amount
+
+    table: claim_amount
+
+    primary_key: [claim_amount_identifier]
+
+    description: Unique identifier for each amount associated with a claim. This is the primary key of the table.","- name: Claim_Amount
+
+    table: claim_amount
+
+    primary_key: [claim_amount_identifier]
+
+    description: ",ddl,DDL Line 34,"Beschreibt den Primary Key der Tabelle, nicht die Tabelle selbst."
+4,C,entity:Loss_Payment,entity,keep,"- name: Loss_Payment
+
+    table: loss_payment
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about payments made to cover losses related to a claim.",,ontology,Classes LossPayment,
+5,C,entity:Loss_Reserve,entity,keep," - name: Loss_Reserve
+
+    table: loss_reserve
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about reserves set aside to cover potential future losses related to a claim.",,ontology,Classes LossReserve,
+6,C,entity:Expense_Payment,entity,keep,"  - name: Expense_Payment
+
+    table: expense_payment
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about payments made for expenses related to a claim.",,ontology,Classes ExpensePayment,
+7,C,entity:Expense_Reserve,entity,keep," - name: Expense_Reserve
+
+    table: expense_reserve
+
+    primary_key: [claim_amount_identifier]
+
+    description: Contains information about reserves set aside for expenses related to a claim.",,ontology,Classes ExpenseReserve,
+8,C,entity:Claim_Coverage,entity,correct,"  - name: Claim_Coverage
+
+    table: claim_coverage
+
+    primary_key: [claim_identifier, effective_date, policy_coverage_detail_identifier]
+
+    description: Unique identifier for each claim. This is the primary key of the table.","  - name: Claim_Coverage
+
+    table: claim_coverage
+
+    primary_key: [claim_identifier, effective_date, policy_coverage_detail_identifier]
+
+    description: ",ddl,DDL Line 72,"Beschreibt den Primary Key der Tabelle, nicht die Tabelle selbst."
+9,C,entity:Policy_Coverage_Detail,entity,keep,"  - name: Policy_Coverage_Detail
+
+    table: policy_coverage_detail
+
+    primary_key: [effective_date, policy_coverage_detail_identifier]
+
+    description: Contains information about coverage details that apply to a policy.",,ontology,Relationships hasPolicy,
+10,C,entity:Policy,entity,correct,"  - name: Policy
+
+    table: policy
+
+    primary_key: [policy_identifier]
+
+    description: Unique identifier for each insurance policy. This is the primary key of the table.","  - name: Policy
+
+    table: policy
+
+    primary_key: [policy_identifier]
+
+    description: ",ddl,DDL Line 102,"Beschreibt den Primary Key der Tabelle, nicht die Tabelle selbst."
+11,C,entity:Policy_Amount,entity,correct,"  - name: Policy_Amount
+
+    table: policy_amount
+
+    primary_key: [policy_amount_identifier]
+
+    description: Unique identifier for each amount associated with a policy. This is the primary key of the table.","  - name: Policy_Amount
+
+    table: policy_amount
+
+    primary_key: [policy_amount_identifier]
+
+    description: ",ddl,DDL Line 120,"Beschreibt den Primary Key der Tabelle, nicht die Tabelle selbst."
+12,C,entity:Agreement_Party_Role,entity,correct,"  - name: Agreement_Party_Role
+
+    table: agreement_party_role
+
+    primary_key: [agreement_identifier, party_identifier, party_role_code, effective_date]
+
+    description: Identifier for each agreement party role. This is the primary key of the table.","  - name: Agreement_Party_Role
+
+    table: agreement_party_role
+
+    primary_key: [agreement_identifier, party_identifier, party_role_code, effective_date]
+
+    description: ",ddl,DDL Line 134,"Beschreibt den Primary Key der Tabelle, nicht die Tabelle selbst."
+13,C,entity:Premium,entity,correct,"  - name: Premium
+
+    table: premium
+
+    primary_key: [policy_amount_identifier]
+
+    description: Unique identifier for each premium associated with a policy. This is the primary key of the table.
+","  - name: Premium
+
+    table: premium
+
+    primary_key: [policy_amount_identifier]
+
+    description: 
+",ddl,DDL Line 143,"Beschreibt den Primary Key der Tabelle, nicht die Tabelle selbst."
+14,C,rel:claim->catastrophe,relationship,correct,"  - name: claim_to_catastrophe
+
+    from: {table: claim, columns: [catastrophe_identifier]}
+
+    to: {table: catastrophe, columns: [catastrophe_identifier]}
+
+    cardinality: one_to_one
+","  - name: claim_to_catastrophe
+
+    from: {table: claim, columns: [catastrophe_identifier]}
+
+    to: {table: catastrophe, columns: [catastrophe_identifier]}
+
+    cardinality: many_to_one
+",ddl;relationship,DDL Line 18-19;reference_relationships.csv Line 2,Catastrophe_Identifier ist nicht Primary Key von Claim. one_to_one widerlegt.
+15,C,rel:claim->claim_amount,relationship,correct,"  - name: claim_to_claim_amount
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: claim_amount, columns: [claim_identifier]}
+
+    cardinality: one_to_many","  - name: claim_to_claim_amount
+
+    from: {table: claim_amount, columns: [claim_identifier]}
+
+    to: {table: claim, columns: [claim_identifier]}
+
+    cardinality: many_to_one",ddl;relationship,DDL Line 36;reference_relationships.csv Line 3,"Fremdschlüssel liegt in Claim_Amount. Richtung vertauscht, one_to_many widerlegt."
+16,C,rel:claim->loss_payment,relationship,delete,"  - name: claim_to_loss_payment
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: loss_payment, columns: [claim_amount_identifier]}
+
+    cardinality: one_to_many",,ddl;relationship,DDL Line 43;reference_relationships.csv Line 17,"Claim_Amount_Identifier verweist auf Claim_Payment, die Tabelle existiert nicht."
+17,C,rel:claim->loss_reserve,relationship,delete,"  - name: claim_to_loss_reserve
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: loss_reserve, columns: [claim_amount_identifier]}
+
+    cardinality: one_to_many",,ddl;relationship,DDL Line 50;reference_relationships.csv Line 18,"Claim_Amount_Identifier verweist auf Claim_Reserve, die Tabelle existiert nicht."
+18,C,rel:claim->expense_payment,relationship,delete,"  - name: claim_to_expense_payment
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: expense_payment, columns: [claim_amount_identifier]}
+
+    cardinality: one_to_many",,ddl;relationship,DDL Line 57;reference_relationships.csv Line 15,"Claim_Amount_Identifier verweist auf Claim_Payment, die Tabelle existiert nicht."
+19,C,rel:claim->expense_reserve,relationship,delete,"  - name: claim_to_expense_reserve
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: expense_reserve, columns: [claim_amount_identifier]}
+
+    cardinality: one_to_many",,ddl;relationship,DDL Line 64;reference_relationships.csv Line 16,"Claim_Amount_Identifier verweist auf Claim_Reserve, die Tabelle existiert nicht."
+20,C,rel:claim->claim_coverage,relationship,correct,"  - name: claim_to_claim_coverage
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: claim_coverage, columns: [claim_identifier]}
+
+    cardinality: one_to_one","  - name: claim_to_claim_coverage
+
+    from: {table: claim_coverage, columns: [claim_identifier]}
+
+    to: {table: claim, columns: [claim_identifier]}
+
+    cardinality: many_to_one",ddl;relationship,DDL Line 72-73;reference_relationships.csv Line 4,"Fremdschlüssel liegt in Claim_Coverage und ist nur Teil des Primary Key. Richtung vertauscht, one_to_one widerlegt."
+21,C,rel:claim->policy_coverage_detail,relationship,delete,"  - name: claim_to_policy_coverage_detail
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: policy_coverage_detail, columns: [policy_coverage_detail_identifier]}
+
+    cardinality: one_to_many",,relationship;ddl,reference_relationships.csv;ddl Lines 2-22,Es gibt keine Beziehung zwischen Claim und Policy_Coverage_Detail.
+22,C,rel:claim->policy,relationship,delete,"  - name: claim_to_policy
+
+    from: {table: claim, columns: [insurable_object_identifier]}
+
+    to: {table: policy, columns: [policy_identifier]}
+
+    cardinality: one_to_one",,ddl;relationship,DDL Line 21;reference_relationships.csv Line 12,"Insurable_Object_Identifier verweist auf Insurable_Object, die Tabelle existiert nicht."
+23,C,rel:claim->agreement_party_role,relationship,delete,"  - name: claim_to_agreement_party_role
+
+    from: {table: claim, columns: [claim_identifier]}
+
+    to: {table: agreement_party_role, columns: [agreement_identifier]}
+
+    cardinality: one_to_many
+",,ddl;relationship,DDL Line 135;reference_relationships.csv Line 9,"Agreement_Identifier verweist auf Agreement, die Tabelle existiert nicht."
+24,C,metric:claim_amount_total,metric,unverifiable,"  - name: claim_amount_total
+
+    description: Total amount of claims.
+
+    formula: SUM(claim_amount.claim_amount)
+
+    filters: [""claim_amount.amount_type_code = 'None'""]
+
+    grain: [claim_amount.claim_amount_identifier]",,data,"SELECT Amount_Type_Code, COUNT(*) FROM Claim_Amount GROUP BY Amount_Type_Code",Formel weder bestätigt noch widerlegt. Amount_Type_Code enthält ausschließlich Wert NULL.
+25,C,metric:policy_amount_total,metric,unverifiable,"  - name: policy_amount_total
+
+    description: Total amount of policies.
+
+    formula: SUM(policy_amount.policy_amount)
+
+    filters: [""policy_amount.amount_type_code = 'Year'""]
+
+    grain: [policy_amount.policy_amount_identifier]",,data,"SELECT Amount_Type_Code, COUNT(*) FROM Policy_Amount GROUP BY Amount_Type_Code","Formel weder bestätigt noch widerlegt. Policy_Amount enthält ausschließlich ""Year"" oder NULL."
