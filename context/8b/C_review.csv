@@ -1,0 +1,248 @@
+unit_id,artefact,unit,unit_type,action,original,corrected,evidence_source,evidence,reason
+1,C,entity:Claim,entity,unverifiable,"  - name: Claim
+
+    table: Claim
+
+    primary_key: [Claim_Identifier]
+
+    description: A record representing an insurance claim made by a policyholder.",,none,,Plausibel aber nicht explizit genannt.
+2,C,entity:Claim_Amount,entity,keep,"  - name: Claim_Amount
+
+    table: Claim_Amount
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: Represents the monetary amounts associated with a specific claim, such as loss or expense values.",,ddl,DDL Line 36,
+3,C,entity:Loss_Payment,entity,keep,"  - name: Loss_Payment
+
+    table: Loss_Payment
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: A record indicating that a payment was made for a loss related to a claim amount.",,ontology,Relationships hasLossPayment,
+4,C,entity:Loss_Reserve,entity,keep,"  - name: Loss_Reserve
+
+    table: Loss_Reserve
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: Represents the reserve amount set aside for a loss associated with a claim amount.",,ontology,Relationships hasLossReserve,
+5,C,entity:Expense_Payment,entity,keep,"  - name: Expense_Payment
+
+    table: Expense_Payment
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: A record indicating that an expense payment was made related to a claim amount.",,ontology,Relationships hasExpensePayment,
+6,C,entity:Expense_Reserve,entity,keep,"  - name: Expense_Reserve
+
+    table: Expense_Reserve
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: Represents the reserve amount set aside for expenses associated with a claim amount.",,ontology,Relationships hasExpenseReserve,
+7,C,entity:Claim_Coverage,entity,keep,"  - name: Claim_Coverage
+
+    table: Claim_Coverage
+
+    primary_key: [Claim_Identifier, Effective_Date, Policy_Coverage_Detail_Identifier]
+
+    description: Indicates which policy coverage applies to a specific claim and when it becomes effective.",,ddl;relationship,DDL Lines 72-74;reference_relationships.csv Lines 4+5,
+8,C,entity:Policy_Coverage_Detail,entity,keep,"  - name: Policy_Coverage_Detail
+
+    table: Policy_Coverage_Detail
+
+    primary_key: [Effective_Date, Policy_Coverage_Detail_Identifier]
+
+    description: Details about the coverage provided under an insurance policy for a specific period of time.",,ddl,DDL Lines 79+83+86,
+9,C,entity:Policy,entity,keep,"  - name: Policy
+
+    table: Policy
+
+    primary_key: [Policy_Identifier]
+
+    description: Represents an individual insurance policy with its effective and expiration dates, along with other details like the policy number and geographic location.",,ddl,DDL Lines 97-101,
+10,C,entity:Policy_Amount,entity,unverifiable,"  - name: Policy_Amount
+
+    table: Policy_Amount
+
+    primary_key: [Policy_Amount_Identifier]
+
+    description: A record representing a specific monetary amount associated with a policy, such as premiums or reserves, for a particular coverage detail and time period.",,none,,Plausibel aber nicht explizit genannt.
+11,C,entity:Agreement_Party_Role,entity,keep,"  - name: Agreement_Party_Role
+
+    table: Agreement_Party_Role
+
+    primary_key: [Agreement_Identifier, Party_Identifier, Party_Role_Code, Effective_Date]
+
+    description: Describes the role of a party in an agreement, including when their role becomes effective and expires.",,ddl,DDL Lines 129-134,
+12,C,entity:Premium,entity,keep,"  - name: Premium
+
+    table: Premium
+
+    primary_key: [Policy_Amount_Identifier]
+
+    description: A record indicating that a premium payment was made for a specific policy amount.",,ontology,Relationships hasPremiumAmount,
+13,C,rel:claim_to_catastrophe,relationship,keep,"  - name: claim_to_catastrophe
+
+    from: {table: Claim, columns: [Catastrophe_Identifier]}
+
+    to: {table: Catastrophe, columns: [Catastrophe_Identifier]}
+
+    cardinality: many_to_one",,relationship,reference_relationships.csv Line 2,
+14,C,rel:claim_to_claim_amount,relationship,correct,"  - name: claim_to_claim_amount
+
+    from: {table: Claim, columns: [Claim_Identifier]}
+
+    to: {table: Claim_Amount, columns: [Claim_Identifier]}
+
+    cardinality: one_to_many","  - name: claim_to_claim_amount
+
+    from: {table: Claim_Amount, columns: [Claim_Identifier]}
+
+    to: {table: Claim, columns: [Claim_Identifier]}
+
+    cardinality: many_to_one",relationship,reference_relationships.csv Line 3,"Beziehung vertauscht, Claim_Amount verweist auf Claim."
+15,C,rel:loss_payment_to_claim_amount,relationship,delete,"  - name: loss_payment_to_claim_amount
+
+    from: {table: Loss_Payment, columns: [Claim_Amount_Identifier]}
+
+    to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+
+    cardinality: many_to_one",,relationship,reference_relationships.csv Line 17,Loss_Payment verweist auf Claim_Payment. Tabelle existiert nicht.
+16,C,rel:loss_reserve_to_claim_amount,relationship,delete,"  - name: loss_reserve_to_claim_amount
+
+    from: {table: Loss_Reserve, columns: [Claim_Amount_Identifier]}
+
+    to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+
+    cardinality: many_to_one",,relationship,reference_relationships.csv Line 18,Loss_Reserve verweist auf Claim_Reserve. Tabelle existiert nicht.
+17,C,rel:expense_payment_to_claim_amount,relationship,delete,"  - name: expense_payment_to_claim_amount
+
+    from: {table: Expense_Payment, columns: [Claim_Amount_Identifier]}
+
+    to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+
+    cardinality: many_to_one",,relationship,reference_relationships.csv Line 15,Expense_Payment verweist auf Claim_Payment. Tabelle existiert nicht.
+18,C,rel:expense_reserve_to_claim_amount,relationship,delete,"  - name: expense_reserve_to_claim_amount
+
+    from: {table: Expense_Reserve, columns: [Claim_Amount_Identifier]}
+
+    to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+
+    cardinality: many_to_one",,relationship,reference_relationships.csv Line 16,Expense_Reserve verweist auf Claim_Reserve. Tabelle existiert nicht.
+19,C,rel:claim_to_claim_coverage,relationship,correct,"  - name: claim_to_claim_coverage
+
+    from: {table: Claim, columns: [Claim_Identifier]}
+
+    to: {table: Claim_Coverage, columns: [Claim_Identifier]}
+
+    cardinality: one_to_many","  - name: claim_to_claim_coverage
+
+    from: {table: Claim_Coverage, columns: [Claim_Identifier]}
+
+    to: {table: Claim, columns: [Claim_Identifier]}
+
+    cardinality: many_to_one",relationship,reference_relationships.csv Line 4,"Beziehung vertauscht, Claim_Coverage verweist auf Claim."
+20,C,rel:policy_coverage_detail_to_policy,relationship,delete,"  - name: policy_coverage_detail_to_policy
+
+    from: {table: Policy_Coverage_Detail, columns: [Policy_Identifier]}
+
+    to: {table: Policy, columns: [Policy_Identifier]}
+
+    cardinality: many_to_one",,relationship,reference_relationships.csv Line 25,Policy_Coverage_Detail verweist auf Policy_Coverage_Part. Tabelle existiert nicht.
+21,C,rel:claim_coverage_to_policy_coverage_detail,relationship,keep,"  - name: claim_coverage_to_policy_coverage_detail
+
+    from: {table: Claim_Coverage, columns: [Policy_Coverage_Detail_Identifier]}
+
+    to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
+
+    cardinality: many_to_one",,relationship,reference_relationships.csv Line 5,
+22,C,rel:policy_to_policy_amount,relationship,correct,"  - name: policy_to_policy_amount
+
+    from: {table: Policy, columns: [Policy_Identifier]}
+
+    to: {table: Policy_Amount, columns: [Policy_Identifier]}
+
+    cardinality: one_to_many","  - name: policy_to_policy_amount
+
+    from: {table: Policy_Amount, columns: [Policy_Identifier]}
+
+    to: {table: Policy, columns: [Policy_Identifier]}
+
+    cardinality: many_to_one",relationship;ddl,reference_relationships.csv Line 7;DDL Line 122,"Beziehung vertauscht. Policy_Amount verweist auf Policy. Policy_Identifier ist nicht Primary Key von Policy_Amount, one_to_many widerlegt."
+23,C,rel:agreement_party_role_to_agreement,relationship,delete,"  - name: agreement_party_role_to_agreement
+
+    from: {table: Agreement_Party_Role, columns: [Agreement_Identifier]}
+
+    to: {table: Agreement, columns: [Agreement_Identifier]}
+
+    cardinality: many_to_one",,ddl;relationship,DDL Line 135;reference_relationships.csv Line 9,Tabelle Agreement existiert nicht.
+24,C,rel:agreement_party_role_to_party,relationship,delete,"  - name: agreement_party_role_to_party
+
+    from: {table: Agreement_Party_Role, columns: [Party_Identifier]}
+
+    to: {table: Party, columns: [Party_Identifier]}
+
+    cardinality: many_to_one",,ddl;relationship,DDL Line 136;reference_relationships.csv Line 10,Tabelle Party existiert nicht.
+25,C,rel:premium_to_policy_amount,relationship,correct,"  - name: premium_to_policy_amount
+
+    from: {table: Premium, columns: [Policy_Amount_Identifier]}
+
+    to: {table: Policy_Amount, columns: [Policy_Amount_Identifier]}
+
+    cardinality: many_to_one","  - name: premium_to_policy_amount
+
+    from: {table: Premium, columns: [Policy_Amount_Identifier]}
+
+    to: {table: Policy_Amount, columns: [Policy_Amount_Identifier]}
+
+    cardinality: one_to_one",ddl;relationship,DDL Lines 143-144;reference_relationships.csv Line 8,Fremdschlüssel Policy_Amount_Identifier ist zugleich vollständiger Primary Key von Premium. many_to_one widerlegt.
+26,C,metric:total_loss_payments,metric,unverifiable,"  - name: total_loss_payments
+
+    description: Total amount of payments made for losses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: [""Loss_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier""]
+
+    grain: [Claim.Claim_Identifier]",,none,,Formel weder widerlegt noch bestätigt.
+27,C,metric:total_expense_payments,metric,unverifiable,"  - name: total_expense_payments
+
+    description: Total amount of payments made for expenses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: [""Expense_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier""]
+
+    grain: [Claim.Claim_Identifier]",,none,,Formel weder widerlegt noch bestätigt.
+28,C,metric:total_loss_reserves,metric,unverifiable,"  - name: total_loss_reserves
+
+    description: Total amount of reserves set aside for losses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: [""Loss_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier""]
+
+    grain: [Claim.Claim_Identifier]
+",,none,,Formel weder widerlegt noch bestätigt.
+29,C,metric:total_expense_reserves,metric,unverifiable,"  - name: total_expense_reserves
+
+    description: Total amount of reserves set aside for expenses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: [""Expense_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier""]
+
+    grain: [Claim.Claim_Identifier]",,none,,Formel weder widerlegt noch bestätigt.
+30,C,metric:total_claim_amount,metric,unverifiable,"  - name: total_claim_amount
+
+    description: Total amount of all claim amounts associated with a specific claim.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: []
+
+    grain: [Claim.Claim_Identifier]",,none,,Formel weder widerlegt noch bestätigt.
+31,C,syntax:code_fence,syntax,syntax,```yaml,,rule,Prüfanweisung §7 Code-Fences,Code-Fence verhindert yaml.safe_load.
+32,C,syntax:code_fence,syntax,syntax,```,,rule,Prüfanweisung §7 Code-Fences,Code-Fence verhindert yaml.safe_load.

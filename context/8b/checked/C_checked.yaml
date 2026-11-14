@@ -1,0 +1,209 @@
+entities:
+
+  - name: Claim
+
+    table: Claim
+
+    primary_key: [Claim_Identifier]
+
+    description: A record representing an insurance claim made by a policyholder.
+
+  - name: Claim_Amount
+
+    table: Claim_Amount
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: Represents the monetary amounts associated with a specific claim, such as loss or expense values.
+
+  - name: Loss_Payment
+
+    table: Loss_Payment
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: A record indicating that a payment was made for a loss related to a claim amount.
+
+  - name: Loss_Reserve
+
+    table: Loss_Reserve
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: Represents the reserve amount set aside for a loss associated with a claim amount.
+
+  - name: Expense_Payment
+
+    table: Expense_Payment
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: A record indicating that an expense payment was made related to a claim amount.
+
+  - name: Expense_Reserve
+
+    table: Expense_Reserve
+
+    primary_key: [Claim_Amount_Identifier]
+
+    description: Represents the reserve amount set aside for expenses associated with a claim amount.
+
+  - name: Claim_Coverage
+
+    table: Claim_Coverage
+
+    primary_key: [Claim_Identifier, Effective_Date, Policy_Coverage_Detail_Identifier]
+
+    description: Indicates which policy coverage applies to a specific claim and when it becomes effective.
+
+  - name: Policy_Coverage_Detail
+
+    table: Policy_Coverage_Detail
+
+    primary_key: [Effective_Date, Policy_Coverage_Detail_Identifier]
+
+    description: Details about the coverage provided under an insurance policy for a specific period of time.
+
+  - name: Policy
+
+    table: Policy
+
+    primary_key: [Policy_Identifier]
+
+    description: Represents an individual insurance policy with its effective and expiration dates, along with other details like the policy number and geographic location.
+
+  - name: Policy_Amount
+
+    table: Policy_Amount
+
+    primary_key: [Policy_Amount_Identifier]
+
+    description: A record representing a specific monetary amount associated with a policy, such as premiums or reserves, for a particular coverage detail and time period.
+
+  - name: Agreement_Party_Role
+
+    table: Agreement_Party_Role
+
+    primary_key: [Agreement_Identifier, Party_Identifier, Party_Role_Code, Effective_Date]
+
+    description: Describes the role of a party in an agreement, including when their role becomes effective and expires.
+
+  - name: Premium
+
+    table: Premium
+
+    primary_key: [Policy_Amount_Identifier]
+
+    description: A record indicating that a premium payment was made for a specific policy amount.
+
+
+
+relationships:
+
+  - name: claim_to_catastrophe
+
+    from: {table: Claim, columns: [Catastrophe_Identifier]}
+
+    to: {table: Catastrophe, columns: [Catastrophe_Identifier]}
+
+    cardinality: many_to_one
+
+  - name: claim_to_claim_amount
+
+    from: {table: Claim_Amount, columns: [Claim_Identifier]}
+
+    to: {table: Claim, columns: [Claim_Identifier]}
+
+    cardinality: many_to_one
+
+    from: {table: Expense_Reserve, columns: [Claim_Amount_Identifier]}
+
+    to: {table: Claim_Amount, columns: [Claim_Amount_Identifier]}
+
+    cardinality: many_to_one
+
+  - name: claim_to_claim_coverage
+
+    from: {table: Claim_Coverage, columns: [Claim_Identifier]}
+
+    to: {table: Claim, columns: [Claim_Identifier]}
+
+    cardinality: many_to_one
+
+  - name: claim_coverage_to_policy_coverage_detail
+
+    from: {table: Claim_Coverage, columns: [Policy_Coverage_Detail_Identifier]}
+
+    to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
+
+    cardinality: many_to_one
+
+  - name: policy_to_policy_amount
+
+    from: {table: Policy_Amount, columns: [Policy_Identifier]}
+
+    to: {table: Policy, columns: [Policy_Identifier]}
+
+    cardinality: many_to_one
+
+  - name: premium_to_policy_amount
+
+    from: {table: Premium, columns: [Policy_Amount_Identifier]}
+
+    to: {table: Policy_Amount, columns: [Policy_Amount_Identifier]}
+
+    cardinality: one_to_one
+
+
+
+metrics:
+
+  - name: total_loss_payments
+
+    description: Total amount of payments made for losses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: ["Loss_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier"]
+
+    grain: [Claim.Claim_Identifier]
+
+  - name: total_expense_payments
+
+    description: Total amount of payments made for expenses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: ["Expense_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier"]
+
+    grain: [Claim.Claim_Identifier]
+
+  - name: total_loss_reserves
+
+    description: Total amount of reserves set aside for losses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: ["Loss_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier"]
+
+    grain: [Claim.Claim_Identifier]
+
+  - name: total_expense_reserves
+
+    description: Total amount of reserves set aside for expenses associated with claims.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: ["Expense_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier"]
+
+    grain: [Claim.Claim_Identifier]
+
+  - name: total_claim_amount
+
+    description: Total amount of all claim amounts associated with a specific claim.
+
+    formula: SUM(Claim_Amount.Claim_Amount)
+
+    filters: []
+
+    grain: [Claim.Claim_Identifier]
