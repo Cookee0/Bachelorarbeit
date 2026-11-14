@@ -1,0 +1,78 @@
+entities:
+  - name: Claim
+    table: Claim
+    primary_key: [Claim_Identifier]
+    description: A claim is a formal request for compensation or reimbursement related to an insurable event.
+  - name: Claim_Amount
+    table: Claim_Amount
+    primary_key: [Claim_Amount_Identifier]
+    description: Represents the amount associated with a claim, such as payments or reserves.
+  - name: Loss_Payment
+    table: Loss_Payment
+    primary_key: [Claim_Amount_Identifier]
+    description: Tracks payments related to losses associated with claims.
+  - name: Loss_Reserve
+    table: Loss_Reserve
+    primary_key: [Claim_Amount_Identifier]
+    description: Tracks reserves for losses associated with claims.
+  - name: Expense_Payment
+    table: Expense_Payment
+    primary_key: [Claim_Amount_Identifier]
+    description: Tracks payments related to expenses associated with claims.
+  - name: Expense_Reserve
+    table: Expense_Reserve
+    primary_key: [Claim_Amount_Identifier]
+    description: Tracks reserves for expenses associated with claims.
+  - name: Claim_Coverage
+    table: Claim_Coverage
+    primary_key: [Claim_Identifier, Effective_Date, Policy_Coverage_Detail_Identifier]
+    description: Represents the coverage details associated with a claim.
+  - name: Policy_Coverage_Detail
+    table: Policy_Coverage_Detail
+    primary_key: [Effective_Date, Policy_Coverage_Detail_Identifier]
+    description: Details of coverage related to a policy.
+  - name: Policy
+    table: Policy
+    primary_key: [Policy_Identifier]
+    description: A policy is a legal agreement that outlines the terms and conditions of insurance coverage.
+  - name: Policy_Amount
+    table: Policy_Amount
+    primary_key: [Policy_Amount_Identifier]
+    description: Represents the amount associated with a policy, such as premiums or benefits.
+  - name: Agreement_Party_Role
+    table: Agreement_Party_Role
+    primary_key: [Agreement_Identifier, Party_Identifier, Party_Role_Code, Effective_Date]
+    description: Defines the role of a party in an agreement.
+
+relationships:
+  - name: claim_to_claim_amount
+    from: {table: Claim_Amount, columns: [Claim_Identifier]}
+    to: {table: Claim, columns: [Claim_Identifier]}
+    cardinality: many_to_one
+  - name: claim_coverage_to_claim
+    from: {table: Claim_Coverage, columns: [Claim_Identifier]}
+    to: {table: Claim, columns: [Claim_Identifier]}
+    cardinality: many_to_one
+  - name: claim_coverage_to_policy_coverage_detail
+    from: {table: Claim_Coverage, columns: [Policy_Coverage_Detail_Identifier]}
+    to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
+    cardinality: many_to_one
+  - name: policy_amount_to_policy
+    from: {table: Policy_Amount, columns: [Policy_Identifier]}
+    to: {table: Policy, columns: [Policy_Identifier]}
+    cardinality: many_to_one
+  - name: policy_amount_to_policy_coverage_detail
+    from: {table: Policy_Amount, columns: [Policy_Coverage_Detail_Identifier]}
+    to: {table: Policy_Coverage_Detail, columns: [Policy_Coverage_Detail_Identifier]}
+    cardinality: many_to_one
+metrics:
+  - name: total_claim_amount
+    description: Total amount associated with all claims.
+    formula: SUM(Claim_Amount.Claim_Amount)
+    filters: []
+    grain: [Claim_Identifier]
+  - name: average_policy_amount
+    description: Average policy amount across all policies.
+    formula: AVG(Policy_Amount.Policy_Amount)
+    filters: []
+    grain: [Policy_Identifier]
