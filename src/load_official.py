@@ -30,6 +30,7 @@ ts = tables(con)
 print(len(ts), "tables:", ts)
 assert len(ts) == 13, "expected the 13 tables of ACME_small.ddl"
 
+# Insert each table's CSV, matching columns by name (case-insensitive).
 for t in ts:
     cols = columns(con, t)
     path = CSV_DIR / f"{t}.csv"

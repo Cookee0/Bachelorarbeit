@@ -1,3 +1,4 @@
+# Generates a context artefact (B or C) with a local model: python generate_context.py <model> <B|C>
 import os
 import sys
 
@@ -32,6 +33,7 @@ with open(f"{ROOT}/prompts/gen_{artefact}.txt", encoding="utf-8") as file:
     prompt = file.read()
 prompt += "\n\n" + inputs
 
+# Artefact C builds on the reviewed B descriptions.
 if artefact == "C":
     prompt += "\n\n## Checked descriptions\n"
     with open(f"{ROOT}/context/{model}/checked/B_checked.md", encoding="utf-8") as file:
@@ -54,6 +56,7 @@ if r["prompt_eval_count"] >= OPTS["num_ctx"] - 256:
     print("WARNING: prompt probably truncated")
 ext = "md" if artefact == "B" else "yaml"
 
+# Save the raw model output; create the target folder if needed.
 if os.path.exists(f"{ROOT}/context/{model}/raw/"):
     with open(
         f"{ROOT}/context/{model}/raw/{artefact}_raw.{ext}", "w", encoding="utf-8"

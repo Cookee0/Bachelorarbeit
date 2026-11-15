@@ -19,11 +19,16 @@ from db import DBS, ROOT, columns, tables
 
 SEED = 20261114  # recorded seed: 2026-11-14
 ID0 = 100_000  # first generated ID; official IDs are all below this
-CUTOFF = date(2026, 11, 14)  # no generated event lies after this day (fixed, not date.today())
+CUTOFF = date(
+    2026, 11, 14
+)  # no generated event lies after this day (fixed, not date.today())
 
 random.seed(SEED)
 
-N_PH, N_AG = 60, 12  # persons by role; only PH and AG occur in the official Agreement_Party_Role
+N_PH, N_AG = (
+    60,
+    12,
+)  # persons by role; only PH and AG occur in the official Agreement_Party_Role
 N_POLICIES = 300
 N_CATASTROPHES = 8
 CLAIMS_PER_POLICY = ([0, 1, 2, 3], [40, 30, 18, 12])
@@ -66,7 +71,12 @@ def insert(table, rows):
 
 
 def distinct_values(table, col):
-    return {v for (v,) in con.execute(f'SELECT DISTINCT "{col}" FROM "{table}" WHERE "{col}" IS NOT NULL')}
+    return {
+        v
+        for (v,) in con.execute(
+            f'SELECT DISTINCT "{col}" FROM "{table}" WHERE "{col}" IS NOT NULL'
+        )
+    }
 
 
 # ---------------------------------------------------------------- 1. copy official
@@ -98,11 +108,15 @@ for t, k in GEN_KEY.items():
 
 # Profile of the official data, taken before anything is generated:
 # which columns are always NULL, and the value sets of the code/name columns.
-OFFICIAL_ALL_NULL = {(t, c) for t in ts for c in columns(con, t) if not distinct_values(t, c)}
+OFFICIAL_ALL_NULL = {
+    (t, c) for t in ts for c in columns(con, t) if not distinct_values(t, c)
+}
 CODE_COLUMNS = [("Agreement_Party_Role", "Party_Role_Code"), ("Policy_Amount", "Amount_Type_Code"),
                 ("Catastrophe", "Catastrophe_Name")]  # fmt: skip
 OFFICIAL_CODES = {tc: distinct_values(*tc) for tc in CODE_COLUMNS}
-CATASTROPHE_NAMES = sorted(OFFICIAL_CODES[("Catastrophe", "Catastrophe_Name")])  # sorted: deterministic
+CATASTROPHE_NAMES = sorted(
+    OFFICIAL_CODES[("Catastrophe", "Catastrophe_Name")]
+)  # sorted: deterministic
 PREMIUM_CODE = "Year"  # official: premium rows 'Year', limit rows NULL
 assert OFFICIAL_CODES[("Policy_Amount", "Amount_Type_Code")] == {PREMIUM_CODE}
 assert OFFICIAL_CODES[("Agreement_Party_Role", "Party_Role_Code")] == {"PH", "AG"}
@@ -117,7 +131,12 @@ def gen_catastrophe(n=N_CATASTROPHES):
     (not stored) so that claims are linked to events in the year of their loss."""
     rows, by_year = [], {}
     for cid in itertools.islice(ids(), n):
-        rows.append({"Catastrophe_Identifier": cid, "Catastrophe_Name": random.choice(CATASTROPHE_NAMES)})
+        rows.append(
+            {
+                "Catastrophe_Identifier": cid,
+                "Catastrophe_Name": random.choice(CATASTROPHE_NAMES),
+            }
+        )
         by_year.setdefault(random.randint(2015, CUTOFF.year), []).append(cid)
     insert("Catastrophe", rows)
     return by_year
@@ -125,7 +144,10 @@ def gen_catastrophe(n=N_CATASTROPHES):
 
 def gen_persons():
     """Persons exist only as Party_Identifier values (Party/Person are not among the 13 tables)."""
-    return {"PH": [next(party_id) for _ in range(N_PH)], "AG": [next(party_id) for _ in range(N_AG)]}
+    return {
+        "PH": [next(party_id) for _ in range(N_PH)],
+        "AG": [next(party_id) for _ in range(N_AG)],
+    }
 
 
 def gen_policy(persons, n=N_POLICIES):
@@ -187,7 +209,13 @@ def gen_policy_amount(pols):
         for seg in p["segs"]:
             common = {"Policy_Identifier": p["id"], "Effective_Date": iso(seg["eff"]),
                       "Policy_Coverage_Detail_Identifier": seg["id"]}  # fmt: skip
-            rows.append({**common, "Policy_Amount_Identifier": next(pa_id), "Policy_Amount": limit})
+            rows.append(
+                {
+                    **common,
+                    "Policy_Amount_Identifier": next(pa_id),
+                    "Policy_Amount": limit,
+                }
+            )
             pid = next(pa_id)
             rows.append({**common, "Policy_Amount_Identifier": pid, "Amount_Type_Code": PREMIUM_CODE,
                          "Policy_Amount": int(prem)})  # fmt: skip
@@ -198,6 +226,7 @@ def gen_policy_amount(pols):
 
 
 def gen_claim(pols, cats_by_year):
+    """Claims per policy with loss, open and close dates; each is linked to a coverage detail."""
     claim_id, rows, cover, claims = ids(), [], [], []
     for p in pols:
         k = random.choices(*CLAIMS_PER_POLICY)[0]
@@ -234,7 +263,12 @@ def gen_claim_amount(claims):
     """All four amount types (the subtype tables). Every claim gets a loss reserve; expense reserve,
     loss and expense payments vary. Only identifier, claim and amount are filled, as official."""
     ca_id, rows = ids(), []
-    sub = {"Loss_Reserve": [], "Expense_Reserve": [], "Loss_Payment": [], "Expense_Payment": []}
+    sub = {
+        "Loss_Reserve": [],
+        "Expense_Reserve": [],
+        "Loss_Payment": [],
+        "Expense_Payment": [],
+    }
 
     def add(c, kind, amount):
         aid = next(ca_id)
@@ -245,10 +279,16 @@ def gen_claim_amount(claims):
     for c in claims:
         loss_res = random.lognormvariate(9.0, 1.0)  # median ~8,100
         add(c, "Loss_Reserve", loss_res)
-        exp_res = loss_res * random.uniform(0.1, 0.25) if random.random() < 0.7 else None
+        exp_res = (
+            loss_res * random.uniform(0.1, 0.25) if random.random() < 0.7 else None
+        )
         if exp_res:
             add(c, "Expense_Reserve", exp_res)
-        n_pay = random.choice([1, 2]) if c["closed"] else (1 if random.random() < 0.4 else 0)
+        n_pay = (
+            random.choice([1, 2])
+            if c["closed"]
+            else (1 if random.random() < 0.4 else 0)
+        )
         if n_pay:
             total = loss_res * random.uniform(0.5, 1.1)
             for share in [1.0] if n_pay == 1 else [0.4, 0.6]:
@@ -261,6 +301,7 @@ def gen_claim_amount(claims):
         insert(kind, r)
 
 
+# Generate parents before children so that every FK resolves.
 print("Generating rows (seed", SEED, ")")
 cats = gen_catastrophe()
 persons = gen_persons()
@@ -276,7 +317,9 @@ con.commit()
 # ---------------------------------------------------------------- 3. checks
 def check_fks():
     """One LEFT JOIN ... WHERE parent IS NULL per FK between existing tables."""
-    with open(ROOT / "context/reference_relationships.csv", encoding="utf-8", newline="") as f:
+    with open(
+        ROOT / "context/reference_relationships.csv", encoding="utf-8", newline=""
+    ) as f:
         refs = [r for r in csv.DictReader(f) if r["table_exists"] == "1"]
     # Subtype tables point to Claim_Payment/Claim_Reserve (not in DB); their real parent is Claim_Amount.
     refs += [{"from_table": t, "from_columns": "Claim_Amount_Identifier", "to_table": "Claim_Amount",
@@ -306,7 +349,9 @@ def check_types():
     for t in ts:
         for _, col, decl, *_ in con.execute(f'PRAGMA table_info("{t}")'):
             base = decl.split("(")[0].lower()
-            got = {s for (s,) in con.execute(f'SELECT DISTINCT typeof("{col}") FROM "{t}"')} - {"null"}
+            got = {
+                s for (s,) in con.execute(f'SELECT DISTINCT typeof("{col}") FROM "{t}"')
+            } - {"null"}
             if not got <= allowed[base]:
                 print(f"  BAD type {t}.{col} ({decl}): {got}")
                 bad += 1
@@ -322,7 +367,9 @@ def check_no_invented_values():
     """Columns that are NULL throughout the official DB stay NULL; code/name columns only use official values."""
     bad = 0
     for t, c in sorted(OFFICIAL_ALL_NULL):
-        (n,) = con.execute(f'SELECT COUNT(*) FROM "{t}" WHERE "{c}" IS NOT NULL').fetchone()
+        (n,) = con.execute(
+            f'SELECT COUNT(*) FROM "{t}" WHERE "{c}" IS NOT NULL'
+        ).fetchone()
         if n:
             print(f"  BAD {t}.{c}: {n} values, official column is all NULL")
             bad += n
@@ -331,7 +378,9 @@ def check_no_invented_values():
         if extra:
             print(f"  BAD {t}.{c}: values not in official DB: {sorted(extra)}")
             bad += len(extra)
-    print(f"  {len(OFFICIAL_ALL_NULL)} all-NULL columns and {len(OFFICIAL_CODES)} code columns checked")
+    print(
+        f"  {len(OFFICIAL_ALL_NULL)} all-NULL columns and {len(OFFICIAL_CODES)} code columns checked"
+    )
     return bad
 
 

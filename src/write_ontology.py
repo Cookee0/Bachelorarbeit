@@ -20,6 +20,7 @@ def short(uri):
 
 
 def terms(rdf_type):
+    # Yield (name, label, domain, range) for every term of the given RDF type.
     for s in sorted(set(graph.subjects(RDF.type, rdf_type))):
         yield (
             short(s),

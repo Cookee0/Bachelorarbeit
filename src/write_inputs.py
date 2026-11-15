@@ -9,10 +9,12 @@ out = ["## Schema (DDL)\n" + (BENCH / "DDL/ACME_small.ddl").read_text(encoding="
 con = connect_readonly(DBS["official"])
 out.append("## Sample data")
 for t in tables(con):
+    # First three rows of each table.
     sample = pd.read_sql_query(f'SELECT * FROM "{t}" LIMIT 3', con)
     out.append(f"### {t}\n{sample.to_string(index=False)}")
     for col in columns(con, t):
         n = con.execute(f'SELECT count(DISTINCT "{col}") FROM "{t}"').fetchone()[0]
+        # List all values of low-cardinality columns.
         if n <= 20:
             vals = [
                 v

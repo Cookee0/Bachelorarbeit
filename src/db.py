@@ -16,6 +16,7 @@ def connect_readonly(path):
 
 
 def tables(con):
+    # Names of all user tables, sorted.
     return [
         t
         for (t,) in con.execute(
@@ -25,4 +26,5 @@ def tables(con):
 
 
 def columns(con, table):
+    # Column names of a table in declaration order.
     return [row[1] for row in con.execute(f'PRAGMA table_info("{table}")')]

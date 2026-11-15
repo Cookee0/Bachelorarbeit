@@ -16,11 +16,12 @@ pd.set_option("display.width", None)
 
 
 def run(con, sql):
+    # Execute one query and print the result table.
     try:
         df = pd.read_sql_query(sql, con)
         print(df.to_string(index=False))
         print(f"({len(df)} rows)")
-    except Exception as e:
+    except pd.errors.DatabaseError as e:
         print(f"Error: {e}")
 
 
