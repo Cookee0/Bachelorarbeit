@@ -1,4 +1,5 @@
 # Benchmark run: asks each model every question per condition and scores the SQL against gold.
+import argparse
 import csv
 import datetime
 import os
@@ -33,11 +34,16 @@ OPTIONS = {
     "top_p": 0.8,
     "top_k": 20,
     "min_p": 0,
-    "repeat_penalty": 1.1,
+    "repeat_penalty": 1.15,
     "num_ctx": NUM_CTX,
 }
 REFUSAL = "CANNOT_ANSWER"
 OUT = f"{ROOT}/results/runs.csv"
+
+# Dry run: small subset, separate output file, overwritten on every start.
+DRY_OUT = f"{ROOT}/results/dry_run.csv"
+DRY_RUNS = [1]
+DRY_QUESTIONS = 5
 
 FIELDS = [
     "timestamp",
@@ -54,6 +60,7 @@ FIELDS = [
     "output_tokens",
     "latency_s",
     "truncation_risk",
+    "done_reason",
     "category",
     "correct_official",
     "correct_extended",
@@ -105,6 +112,11 @@ def ask(tag, prompt, seed):
     )
 
 
+def warm_up(tag):
+    # Throwaway request so the model is loaded (with the real options) before the first recorded run.
+    ask(tag, "hi", seed=0)
+
+
 def score(question, answer, gold):
     # Returns (category, sql, correct_official, correct_extended).
     if REFUSAL in answer:
@@ -127,19 +139,24 @@ def score(question, answer, gold):
     return category, sql, official, extended
 
 
-def load_done():
-    # Runs already in runs.csv, so an interrupted benchmark can be resumed.
-    if not os.path.exists(OUT):
+def load_done(path):
+    # Runs already in the output file, so an interrupted benchmark can be resumed.
+    if not os.path.exists(path):
         return set()
-    with open(OUT, encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         return {
             (r["model"], r["condition"], r["qid"], r["run"]) for r in csv.DictReader(f)
         }
 
 
-def main():
+def main(dry_run=False):
+    out = DRY_OUT if dry_run else OUT
+    runs = DRY_RUNS if dry_run else RUNS
+
     with open(f"{ROOT}/questions/questions.csv", encoding="utf-8") as f:
         questions = list(csv.DictReader(f))
+    if dry_run:
+        questions = questions[:DRY_QUESTIONS]
 
     digests = {m.model: m.digest for m in ollama.list().models}
 
@@ -150,15 +167,18 @@ def main():
             for name, db in DBS.items():
                 gold[(q["ID"], name)] = run_sql(db, q["gold_sql"])
 
-    done = load_done()
+    if dry_run and os.path.exists(out):
+        os.remove(out)
+    done = load_done(out)
 
-    with open(OUT, "a", newline="", encoding="utf-8") as f:
+    with open(out, "a", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, FIELDS)
         if not done:
             writer.writeheader()
 
         for model, tag in MODELS.items():
-            for run in RUNS:
+            warm_up(tag)
+            for run in runs:
                 for condition, level, source in CONDITIONS:
                     # the 8B's own B and C runs already are its shared-context runs
                     if source == model:
@@ -193,6 +213,7 @@ def main():
                                 "latency_s": round(response["total_duration"] / 1e9, 3),
                                 "truncation_risk": response["prompt_eval_count"]
                                 >= NUM_CTX - 256,
+                                "done_reason": response["done_reason"],
                                 "category": category,
                                 "correct_official": official,
                                 "correct_extended": extended,
@@ -203,5 +224,29 @@ def main():
                         f.flush()
 
 
+def summarize(path):
+    # Dry-run check: anything here means the setup is not ready for the main runs.
+    with open(path, encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    cut = [r for r in rows if r["done_reason"] != "stop"]
+    risky = [r for r in rows if r["truncation_risk"] == "True"]
+    errors = [r for r in rows if r["category"] == "error"]
+    print(f"{len(rows)} rows written to {path}")
+    print(f"  cut off (done_reason != stop): {len(cut)}")
+    print(f"  prompt near context limit:     {len(risky)}")
+    print(f"  SQL errors:                    {len(errors)}")
+    for r in cut:
+        print(f"    cut: {r['model']} {r['condition']} {r['qid']} ({r['done_reason']})")
+
+
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help=f"{DRY_QUESTIONS} questions, run 1 only, writes to dry_run.csv",
+    )
+    args = parser.parse_args()
+    main(dry_run=args.dry_run)
+    if args.dry_run:
+        summarize(DRY_OUT)
