@@ -40,10 +40,25 @@ REFUSAL = "CANNOT_ANSWER"
 OUT = f"{ROOT}/results/runs.csv"
 
 FIELDS = [
-    "timestamp", "model", "tag", "digest", "condition", "context_source",
-    "qid", "answerable", "run", "seed", "prompt_tokens", "output_tokens",
-    "latency_s", "truncation_risk", "category", "correct_official",
-    "correct_extended", "sql", "raw",
+    "timestamp",
+    "model",
+    "tag",
+    "digest",
+    "condition",
+    "context_source",
+    "qid",
+    "answerable",
+    "run",
+    "seed",
+    "prompt_tokens",
+    "output_tokens",
+    "latency_s",
+    "truncation_risk",
+    "category",
+    "correct_official",
+    "correct_extended",
+    "sql",
+    "raw",
 ]
 
 
@@ -117,7 +132,9 @@ def load_done():
     if not os.path.exists(OUT):
         return set()
     with open(OUT, encoding="utf-8") as f:
-        return {(r["model"], r["condition"], r["qid"], r["run"]) for r in csv.DictReader(f)}
+        return {
+            (r["model"], r["condition"], r["qid"], r["run"]) for r in csv.DictReader(f)
+        }
 
 
 def main():
@@ -159,27 +176,30 @@ def main():
                         answer = response["message"]["content"]
                         category, sql, official, extended = score(q, answer, gold)
 
-                        writer.writerow({
-                            "timestamp": datetime.datetime.now().isoformat(),
-                            "model": model,
-                            "tag": tag,
-                            "digest": digests.get(tag, ""),
-                            "condition": condition,
-                            "context_source": context_source,
-                            "qid": q["ID"],
-                            "answerable": q["answerable"],
-                            "run": run,
-                            "seed": run,
-                            "prompt_tokens": response["prompt_eval_count"],
-                            "output_tokens": response["eval_count"],
-                            "latency_s": round(response["total_duration"] / 1e9, 3),
-                            "truncation_risk": response["prompt_eval_count"] >= NUM_CTX - 256,
-                            "category": category,
-                            "correct_official": official,
-                            "correct_extended": extended,
-                            "sql": sql,
-                            "raw": answer,
-                        })
+                        writer.writerow(
+                            {
+                                "timestamp": datetime.datetime.now().isoformat(),
+                                "model": model,
+                                "tag": tag,
+                                "digest": digests.get(tag, ""),
+                                "condition": condition,
+                                "context_source": context_source,
+                                "qid": q["ID"],
+                                "answerable": q["answerable"],
+                                "run": run,
+                                "seed": run,
+                                "prompt_tokens": response["prompt_eval_count"],
+                                "output_tokens": response["eval_count"],
+                                "latency_s": round(response["total_duration"] / 1e9, 3),
+                                "truncation_risk": response["prompt_eval_count"]
+                                >= NUM_CTX - 256,
+                                "category": category,
+                                "correct_official": official,
+                                "correct_extended": extended,
+                                "sql": sql,
+                                "raw": answer,
+                            }
+                        )
                         f.flush()
 
 
