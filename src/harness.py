@@ -29,13 +29,15 @@ CONDITIONS = [
 
 RUNS = [1, 2, 3, 4, 5]
 NUM_CTX = 8192
+NUM_PREDICT = 2048
 OPTIONS = {
     "temperature": 0.7,
     "top_p": 0.8,
     "top_k": 20,
     "min_p": 0,
-    "repeat_penalty": 1.15,
+    "repeat_penalty": 1.0,
     "num_ctx": NUM_CTX,
+    "num_predict": NUM_PREDICT
 }
 REFUSAL = "CANNOT_ANSWER"
 OUT = f"{ROOT}/results/runs.csv"
@@ -149,7 +151,7 @@ def load_done(path):
         }
 
 
-def main(dry_run=False):
+def main(dry_run=False, resume=False):
     out = DRY_OUT if dry_run else OUT
     runs = DRY_RUNS if dry_run else RUNS
 
@@ -169,6 +171,12 @@ def main(dry_run=False):
 
     if dry_run and os.path.exists(out):
         os.remove(out)
+    elif not resume and os.path.exists(out):
+        # Fresh start: keep the old results under a timestamped name instead of deleting them.
+        stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup = out.replace(".csv", f"_{stamp}.csv")
+        os.rename(out, backup)
+        print(f"Previous results moved to {backup}")
     done = load_done(out)
 
     with open(out, "a", newline="", encoding="utf-8") as f:
@@ -246,7 +254,12 @@ if __name__ == "__main__":
         action="store_true",
         help=f"{DRY_QUESTIONS} questions, run 1 only, writes to dry_run.csv",
     )
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="continue an interrupted run instead of starting a fresh runs.csv",
+    )
     args = parser.parse_args()
-    main(dry_run=args.dry_run)
+    main(dry_run=args.dry_run, resume=args.resume)
     if args.dry_run:
         summarize(DRY_OUT)

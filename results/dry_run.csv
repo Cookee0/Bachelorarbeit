@@ -1,0 +1,1426 @@
+timestamp,model,tag,digest,condition,context_source,qid,answerable,run,seed,prompt_tokens,output_tokens,latency_s,truncation_risk,done_reason,category,correct_official,correct_extended,sql,raw
+2026-11-20T19:33:52.852844,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,A,1.7b,A0,1,1,1,1623,175,1.488,False,stop,error,,,"SELECT 
+    P.Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    SUM(LP.Claim_Amount + LR.Claim_Amount + EP.Claim_Amount + ER.Claim_Amount) AS Total_Loss
+FROM Policy_Payment LP
+JOIN Loss_Payment LP ON LP.Claim_Amount_Identifier = LP.Claim_Amount_Identifier
+JOIN Loss_Reserve LR ON LP.Claim_Amount_Identifier = LR.Claim_Amount_Identifier
+JOIN Expense_Payment EP ON LP.Claim_Amount_Identifier = EP.Claim_Amount_Identifier
+JOIN Expense_Reserve ER ON LP.Claim_Amount_Identifier = ER.Claim_Amount_Identifier
+JOIN Policy P ON LP.Claim_Amount_Identifier = P.Policy_Amount_Identifier
+GROUP BY P.Policy_Number","```sql
+SELECT 
+    P.Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    SUM(LP.Claim_Amount + LR.Claim_Amount + EP.Claim_Amount + ER.Claim_Amount) AS Total_Loss
+FROM Policy_Payment LP
+JOIN Loss_Payment LP ON LP.Claim_Amount_Identifier = LP.Claim_Amount_Identifier
+JOIN Loss_Reserve LR ON LP.Claim_Amount_Identifier = LR.Claim_Amount_Identifier
+JOIN Expense_Payment EP ON LP.Claim_Amount_Identifier = EP.Claim_Amount_Identifier
+JOIN Expense_Reserve ER ON LP.Claim_Amount_Identifier = ER.Claim_Amount_Identifier
+JOIN Policy P ON LP.Claim_Amount_Identifier = P.Policy_Amount_Identifier
+GROUP BY P.Policy_Number;
+```"
+2026-11-20T19:33:54.418914,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,A,1.7b,A1,1,1,1,1618,224,1.564,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Identifier,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM(ER.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(EPP.Claim_Amount) AS Total_Expense_Payment,
+    SUM(ERP.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim_Coverage c
+JOIN 
+    Policy p ON c.Policy_Coverage_Detail_Identifier = p.Policy_Coverage_Detail_Identifier
+JOIN 
+    Loss_Payment LP ON c.Claim_Identifier = LP.Claim_Identifier
+JOIN 
+    Expense_Payment EPP ON c.Claim_Identifier = EPP.Claim_Identifier
+JOIN 
+    Loss_Reserve ER ON c.Claim_Identifier = ER.Claim_Identifier
+JOIN 
+    Expense_Reserve ERP ON c.Claim_Identifier = ERP.Claim_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, p.Policy_Identifier","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Identifier,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM(ER.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(EPP.Claim_Amount) AS Total_Expense_Payment,
+    SUM(ERP.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim_Coverage c
+JOIN 
+    Policy p ON c.Policy_Coverage_Detail_Identifier = p.Policy_Coverage_Detail_Identifier
+JOIN 
+    Loss_Payment LP ON c.Claim_Identifier = LP.Claim_Identifier
+JOIN 
+    Expense_Payment EPP ON c.Claim_Identifier = EPP.Claim_Identifier
+JOIN 
+    Loss_Reserve ER ON c.Claim_Identifier = ER.Claim_Identifier
+JOIN 
+    Expense_Reserve ERP ON c.Claim_Identifier = ERP.Claim_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, p.Policy_Identifier;
+```"
+2026-11-20T19:33:54.914009,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,A,1.7b,A2,1,1,1,1600,70,0.493,False,stop,error,,,"SELECT Policy.Policy_Identifier, Party.Party_Identifier, Policy.Policy_Number, Policy.Status_Code, Policy.Geographic_Location_Identifier, Policy_Coverage_Detail.Coverage_Description 
+FROM Policy 
+JOIN Policy_Coverage_Detail ON Policy.Policy_Identifier = Policy_Coverage_Detail.Policy_Identifier","```sql
+SELECT Policy.Policy_Identifier, Party.Party_Identifier, Policy.Policy_Number, Policy.Status_Code, Policy.Geographic_Location_Identifier, Policy_Coverage_Detail.Coverage_Description 
+FROM Policy 
+JOIN Policy_Coverage_Detail ON Policy.Policy_Identifier = Policy_Coverage_Detail.Policy_Identifier;
+```"
+2026-11-20T19:33:55.067827,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,A,1.7b,A3,1,1,1,1599,19,0.151,False,stop,wrong,False,False,SELECT COUNT(*) FROM Claim WHERE Company_Claim_Number IS NOT NULL,"```sql
+SELECT COUNT(*) FROM Claim WHERE Company_Claim_Number IS NOT NULL;
+```"
+2026-11-20T19:33:55.131921,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,A,1.7b,A4,1,1,1,1602,5,0.063,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:33:57.640533,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B,1.7b,A0,1,1,1,3636,298,2.499,False,stop,error,,,"SELECT 
+    Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    AVG(COALESCE(Loss_Payment.Claim_Amount, 0) + COALESCE(Loss_Reserve.Claim_Amount, 0) + COALESCE(Expense_Payment.Claim_Amount, 0) + COALESCE(Expense_Reserve.Claim_Amount, 0)) AS Average_Loss
+FROM Policy 
+JOIN Policy_Amount ON Policy.Policy_Identifier = Policy_Amount.Policy_Identifier
+JOIN Claim_Coverage ON Claim_Coverage.Claim_Identifier = Policy_Policy_Amount.Claim_Identifier
+JOIN Claim_ON_Claim_Coverage ON Claim_Coverage.Claim_Identifier = Claim_ON_Claim_Coverage.Claim_Identifier
+JOIN Loss_Payment ON Loss_Payment.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Loss_Payment_Identifier
+JOIN Loss_Reserve ON Loss_Reserve.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Loss_Reserve_Identifier
+JOIN Expense_Payment ON Expense_Payment.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Expense_Payment_Identifier
+JOIN Expense_Reserve ON Expense_Reserve.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Expense_Reserve_Identifier
+WHERE Policy.Policy_Number IS NOT NULL
+GROUP BY Policy.Number","```sql
+SELECT 
+    Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    AVG(COALESCE(Loss_Payment.Claim_Amount, 0) + COALESCE(Loss_Reserve.Claim_Amount, 0) + COALESCE(Expense_Payment.Claim_Amount, 0) + COALESCE(Expense_Reserve.Claim_Amount, 0)) AS Average_Loss
+FROM Policy 
+JOIN Policy_Amount ON Policy.Policy_Identifier = Policy_Amount.Policy_Identifier
+JOIN Claim_Coverage ON Claim_Coverage.Claim_Identifier = Policy_Policy_Amount.Claim_Identifier
+JOIN Claim_ON_Claim_Coverage ON Claim_Coverage.Claim_Identifier = Claim_ON_Claim_Coverage.Claim_Identifier
+JOIN Loss_Payment ON Loss_Payment.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Loss_Payment_Identifier
+JOIN Loss_Reserve ON Loss_Reserve.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Loss_Reserve_Identifier
+JOIN Expense_Payment ON Expense_Payment.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Expense_Payment_Identifier
+JOIN Expense_Reserve ON Expense_Reserve.Claim_Amount_Identifier = Claim_ON_Claim_Coverage.Expense_Reserve_Identifier
+WHERE Policy.Policy_Number IS NOT NULL
+GROUP BY Policy.Number;
+```"
+2026-11-20T19:33:59.710418,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B,1.7b,A1,1,1,1,3631,267,2.068,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM(LR.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(EP.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Er.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim_Coverage cc
+JOIN 
+    Loss_Payment LP ON cc.Policy_Coverage_Detail_Identifier = LP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Loss_Reserve LR ON cc.Policy_Coverage_Detail_Identifier = LR.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Payment EP ON cc.Policy_Coverage_Detail_Identifier = EP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Reserve Er ON cc.Policy_Coverage_Detail_Identifier = Er.Policy_Coverage_Detail_Identifier
+JOIN 
+    Policy p ON cc.Policy_Coverage_Detail_Identifier = p.Policy_Number
+WHERE 
+    cc.Catastrophe_Identifier = p.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM(LR.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(EP.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Er.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim_Coverage cc
+JOIN 
+    Loss_Payment LP ON cc.Policy_Coverage_Detail_Identifier = LP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Loss_Reserve LR ON cc.Policy_Coverage_Detail_Identifier = LR.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Payment EP ON cc.Policy_Coverage_Detail_Identifier = EP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Reserve Er ON cc.Policy_Coverage_Detail_Identifier = Er.Policy_Coverage_Detail_Identifier
+JOIN 
+    Policy p ON cc.Policy_Coverage_Detail_Identifier = p.Policy_Number
+WHERE 
+    cc.Catastrophe_Identifier = p.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number;
+```"
+2026-11-20T19:34:00.262687,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B,1.7b,A2,1,1,1,3613,69,0.551,False,stop,error,,,"SELECT Policy.Policy_Identifier, Party_Party_Identifier, Party.Party_Identifier 
+FROM Policy 
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier 
+JOIN Party ON Agreement_Party_Role.Party_Identifier = Party.Party_Identifier","```sql
+SELECT Policy.Policy_Identifier, Party_Party_Identifier, Party.Party_Identifier 
+FROM Policy 
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier 
+JOIN Party ON Agreement_Party_Role.Party_Identifier = Party.Party_Identifier;
+```"
+2026-11-20T19:34:00.543390,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B,1.7b,A3,1,1,1,3612,31,0.279,False,stop,error,,,"SELECT COUNT(*) 
+FROM Claim 
+WHERE Policy_Identifier = (SELECT Policy_Identifier FROM Policy WHERE Policy_Number = 'XXX')","```sql
+SELECT COUNT(*) 
+FROM Claim 
+WHERE Policy_Identifier = (SELECT Policy_Identifier FROM Policy WHERE Policy_Number = 'XXX');
+```"
+2026-11-20T19:34:00.800877,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B,1.7b,A4,1,1,1,3615,29,0.256,False,stop,error,,,"SELECT AVG(DATEDIFF(Claim_Close_Date, Claim_Open_Date)) AS Average_Time_To_Settle
+FROM Claim","```sql
+SELECT AVG(DATEDIFF(Claim_Close_Date, Claim_Open_Date)) AS Average_Time_To_Settle
+FROM Claim;
+```"
+2026-11-20T19:34:02.887293,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C,1.7b,A0,1,1,1,4339,245,2.075,False,stop,error,,,"SELECT 
+    Policy.Number AS Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    SUM(Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Total_Loss
+FROM Policy
+JOIN Claim_Coverage ON Policy.Policy_Identifier = Claim_Coverage.Policy_Identifier
+JOIN Claim_ON_Claim_Coverage ON Claim_Coverage.Claims_Made_Date = Claim_ON_Claim_Coverage.Claims_Made_Date
+JOIN Loss_Payment ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN Loss_Reserve ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN Expense_Payment ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+JOIN Expense_Reserve ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+WHERE Policy.Number IS NOT NULL
+GROUP BY Policy.Number","```sql
+SELECT 
+    Policy.Number AS Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    SUM(Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Total_Loss
+FROM Policy
+JOIN Claim_Coverage ON Policy.Policy_Identifier = Claim_Coverage.Policy_Identifier
+JOIN Claim_ON_Claim_Coverage ON Claim_Coverage.Claims_Made_Date = Claim_ON_Claim_Coverage.Claims_Made_Date
+JOIN Loss_Payment ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN Loss_Reserve ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN Expense_Payment ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+JOIN Expense_Reserve ON Claim_ON_Claim_Coverage.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+WHERE Policy.Number IS NOT NULL
+GROUP BY Policy.Number;
+```"
+2026-11-20T19:34:04.042510,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C,1.7b,A1,1,1,1,4334,134,1.154,False,stop,error,,,"SELECT SUM(Loss_Payment.Claim_Amount) + SUM(Loss_Reserve.Claim_Amount) + SUM(Expense_Payment.Claim_Amount) + SUM(Expense_Reserve.Claim_Amount) AS Total_Loss
+FROM Loss_Payment
+JOIN Loss_Reserve ON Loss_Payment.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN Expense_Payment ON Expense_Payment.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN Expense_Reserve ON Expense_Reserve.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier","```sql
+SELECT SUM(Loss_Payment.Claim_Amount) + SUM(Loss_Reserve.Claim_Amount) + SUM(Expense_Payment.Claim_Amount) + SUM(Expense_Reserve.Claim_Amount) AS Total_Loss
+FROM Loss_Payment
+JOIN Loss_Reserve ON Loss_Payment.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN Expense_Payment ON Expense_Payment.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN Expense_Reserve ON Expense_Reserve.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+```"
+2026-11-20T19:34:04.569559,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C,1.7b,A2,1,1,1,4316,63,0.525,False,stop,error,,,"SELECT Policy.Policy_Identifier, Party.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+JOIN Party ON Agreement_Party_Role.Parties_Identifier = Party.Party_Identifier","```sql
+SELECT Policy.Policy_Identifier, Party.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+JOIN Party ON Agreement_Party_Role.Parties_Identifier = Party.Party_Identifier;
+```"
+2026-11-20T19:34:04.703208,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C,1.7b,A3,1,1,1,4315,11,0.131,False,stop,wrong,False,False,SELECT COUNT(*) FROM Claim,"```sql
+SELECT COUNT(*) FROM Claim;
+```"
+2026-11-20T19:34:04.795405,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C,1.7b,A4,1,1,1,4318,5,0.091,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:05.890680,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B_ctx8b,8b,A0,1,1,1,2950,94,1.083,False,stop,error,,,"SELECT 
+    P.Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    AVG(LP.Claim_Amount) AS Average_Loss
+FROM Policy_Payment LP
+JOIN Claim_Coverage CC ON LP.Claim_Amount_Identifier = CC.Claim_Identifier
+JOIN Policy P ON CC.Policy_Coverage_Detail_Identifier = P.Policy_Coverage_Detail_Identifier
+GROUP BY P.Policy_Number","```sql
+SELECT 
+    P.Policy_Number,
+    COUNT(*) AS Number_of_Claims,
+    AVG(LP.Claim_Amount) AS Average_Loss
+FROM Policy_Payment LP
+JOIN Claim_Coverage CC ON LP.Claim_Amount_Identifier = CC.Claim_Identifier
+JOIN Policy P ON CC.Policy_Coverage_Detail_Identifier = P.Policy_Coverage_Detail_Identifier
+GROUP BY P.Policy_Number;
+```"
+2026-11-20T19:34:08.146275,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B_ctx8b,8b,A1,1,1,1,2945,285,2.254,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM(LR.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(EP.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Er.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim_Coverage cc
+JOIN 
+    Loss_Payment LP ON cc.Policy_Coverage_Detail_Identifier = LP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Loss_Reserve LR ON cc.Policy_Coverage_Detail_Identifier = LR.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Payment EP ON cc.Policy_Coverage_Detail_Identifier = EP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Reserve Er ON cc.Policy_Coverage_Detail_Identifier = Er.Policy_Coverage_Detail_Identifier
+JOIN 
+    Claim ON cc.Claim_Identifier = Claim.Claim_Identifier
+JOIN 
+    Catastrophe c ON Claim.Catastrophe_Identifier = c.Catastrophe_Identifier
+JOIN 
+    Policy p ON Claim.Policy_Identifier = p.Policy_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, p.Policy_Number","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM(LR.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(EP.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Er.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim_Coverage cc
+JOIN 
+    Loss_Payment LP ON cc.Policy_Coverage_Detail_Identifier = LP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Loss_Reserve LR ON cc.Policy_Coverage_Detail_Identifier = LR.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Payment EP ON cc.Policy_Coverage_Detail_Identifier = EP.Policy_Coverage_Detail_Identifier
+JOIN 
+    Expense_Reserve Er ON cc.Policy_Coverage_Detail_Identifier = Er.Policy_Coverage_Detail_Identifier
+JOIN 
+    Claim ON cc.Claim_Identifier = Claim.Claim_Identifier
+JOIN 
+    Catastrophe c ON Claim.Catastrophe_Identifier = c.Catastrophe_Identifier
+JOIN 
+    Policy p ON Claim.Policy_Identifier = p.Policy_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, p.Policy_Number;
+```"
+2026-11-20T19:34:08.842813,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B_ctx8b,8b,A2,1,1,1,2927,82,0.694,False,stop,error,,,"SELECT Policy.Policy_Identifier, Party.Party_Identifier, Policy.Policy_Number, Policy.Effective_Date, Policy.Expiration_Date, Policy.Status_Code 
+FROM Policy 
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier 
+JOIN Party ON Agreement_Party_Role.Party_Identifier = Party.Party_Identifier","```sql
+SELECT Policy.Policy_Identifier, Party.Party_Identifier, Policy.Policy_Number, Policy.Effective_Date, Policy.Expiration_Date, Policy.Status_Code 
+FROM Policy 
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier 
+JOIN Party ON Agreement_Party_Role.Party_Identifier = Party.Party_Identifier;
+```"
+2026-11-20T19:34:08.966056,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B_ctx8b,8b,A3,1,1,1,2926,11,0.121,False,stop,wrong,False,False,SELECT COUNT(*) FROM Claim,"```sql
+SELECT COUNT(*) FROM Claim;
+```"
+2026-11-20T19:34:09.051678,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,B_ctx8b,8b,A4,1,1,1,2929,5,0.084,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:10.471078,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C_ctx8b,8b,A0,1,1,1,4252,154,1.411,False,stop,error,,,"SELECT 
+    Policy.Policy_Number AS PolicyNumber,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS NumberOfClaims,
+    AVG(Claim_Amount.Claim_Amount) AS AverageLoss
+FROM 
+    Policy
+JOIN 
+    Claim ON Policy.Policy_Identifier = Claim.Claim_Identifier
+JOIN 
+    Claim_Amount ON Claim.Claim_Identifier = Claim_Amount.Claim_Identifier
+WHERE 
+    (Claim_Amount.Claim_Amount + Loss_Payment.Claim_Amount_Identifier + Loss_Reserve.Claim_Amount_Identifier + Expense_Payment.Claim_Amount_Identifier + Expense_Reserve.Claim_Amount_Identifier) > 0
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number AS PolicyNumber,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS NumberOfClaims,
+    AVG(Claim_Amount.Claim_Amount) AS AverageLoss
+FROM 
+    Policy
+JOIN 
+    Claim ON Policy.Policy_Identifier = Claim.Claim_Identifier
+JOIN 
+    Claim_Amount ON Claim.Claim_Identifier = Claim_Amount.Claim_Identifier
+WHERE 
+    (Claim_Amount.Claim_Amount + Loss_Payment.Claim_Amount_Identifier + Loss_Reserve.Claim_Amount_Identifier + Expense_Payment.Claim_Amount_Identifier + Expense_Reserve.Claim_Amount_Identifier) > 0
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:34:12.232657,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C_ctx8b,8b,A1,1,1,1,4247,219,1.76,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Identifier,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM( LR.Claim_Amount ) AS Total_Loss_Reserve,
+    SUM(EP.Claim_Amount) AS Total_Expense_Payment,
+    SUM( ER.Claim_Amount ) AS Total_Expense_Reserve
+FROM Claim c
+JOIN Claim_Amount LA ON c.Catastrophe_Identifier = LA.Catastrophe_Identifier
+JOIN Loss_Payment LP ON LA.Claim_Amount_Identifier = LP.Claim_Amount_Identifier
+JOIN Loss_Reserve LR ON LA.Claim_Amount_Identifier = LR.Claim_Amount_Identifier
+JOIN Expense_Payment EP ON LA.Claim_Amount_Identifier = EP.Claim_Amount_Identifier
+JOIN Expense_Reserve ER ON LA.Claim_Amount_Identifier = ER.Claim_Amount_Identifier
+GROUP BY c.Catastrophe_Identifier, p.Policy_Identifier","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Identifier,
+    SUM(LP.Claim_Amount) AS Total_Loss_Payment,
+    SUM( LR.Claim_Amount ) AS Total_Loss_Reserve,
+    SUM(EP.Claim_Amount) AS Total_Expense_Payment,
+    SUM( ER.Claim_Amount ) AS Total_Expense_Reserve
+FROM Claim c
+JOIN Claim_Amount LA ON c.Catastrophe_Identifier = LA.Catastrophe_Identifier
+JOIN Loss_Payment LP ON LA.Claim_Amount_Identifier = LP.Claim_Amount_Identifier
+JOIN Loss_Reserve LR ON LA.Claim_Amount_Identifier = LR.Claim_Amount_Identifier
+JOIN Expense_Payment EP ON LA.Claim_Amount_Identifier = EP.Claim_Amount_Identifier
+JOIN Expense_Reserve ER ON LA.Claim_Amount_Identifier = ER.Claim_Amount_Identifier
+GROUP BY c.Catastrophe_Identifier, p.Policy_Identifier;
+```"
+2026-11-20T19:34:12.686712,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C_ctx8b,8b,A2,1,1,1,4229,53,0.452,False,stop,error,,,"SELECT Policy.Policy_Identifier, Agreement_Party_Role.Parties_Identifier AS Policy_Holder_ID 
+FROM Policy 
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Policy_Identifier","```sql
+SELECT Policy.Policy_Identifier, Agreement_Party_Role.Parties_Identifier AS Policy_Holder_ID 
+FROM Policy 
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Policy_Identifier;
+```"
+2026-11-20T19:34:12.813886,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C_ctx8b,8b,A3,1,1,1,4228,11,0.125,False,stop,wrong,False,False,SELECT COUNT(*) FROM Claim,"```sql
+SELECT COUNT(*) FROM Claim;
+```"
+2026-11-20T19:34:12.895618,1.7b,qwen3:1.7b-8k-nothink-recommended,12d803ee47d270ec23d2dae44733af0b504a410e5b93d222e285587b89693fd0,C_ctx8b,8b,A4,1,1,1,4231,5,0.08,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:19.554615,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,A,4b,A0,1,1,1,1623,227,3.261,False,stop,error,,,"SELECT Policy_Policy_Number, AVG(Loss) AS Average_Loss, COUNT(Claim_Identifier) AS Number_of_Claims
+FROM (
+    SELECT 
+        Policy.Policy_Number AS Policy_Policy_Number,
+        SUM(Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Loss,
+        Claim.Claim_Identifier
+    FROM Policy
+    JOIN Claim ON Policy.Policy_Identifier = Claim.Claim_Identifier
+    LEFT JOIN Loss_Payment ON Claim.Claim_Identifier = Loss_Payment.Claim_Amount_Identifier
+    LEFT JOIN Loss_Reserve ON Claim.Claim_Identifier = Loss_Reserve.Claim_Amount_Identifier
+    LEFT JOIN Expense_Payment ON Claim.Claim_Identifier = Expense_Payment.Claim_Amount_Identifier
+    LEFT JOIN Expense_Reserve ON Claim.Claim_Identifier = Expense_Reserve.Claim_Amount_Identifier
+    GROUP BY Policy.Policy_Number, Claim.Claim_Identifier
+) AS Subquery
+GROUP BY Policy_Policy_Number","SELECT Policy_Policy_Number, AVG(Loss) AS Average_Loss, COUNT(Claim_Identifier) AS Number_of_Claims
+FROM (
+    SELECT 
+        Policy.Policy_Number AS Policy_Policy_Number,
+        SUM(Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Loss,
+        Claim.Claim_Identifier
+    FROM Policy
+    JOIN Claim ON Policy.Policy_Identifier = Claim.Claim_Identifier
+    LEFT JOIN Loss_Payment ON Claim.Claim_Identifier = Loss_Payment.Claim_Amount_Identifier
+    LEFT JOIN Loss_Reserve ON Claim.Claim_Identifier = Loss_Reserve.Claim_Amount_Identifier
+    LEFT JOIN Expense_Payment ON Claim.Claim_Identifier = Expense_Payment.Claim_Amount_Identifier
+    LEFT JOIN Expense_Reserve ON Claim.Claim_Identifier = Expense_Reserve.Claim_Amount_Identifier
+    GROUP BY Policy.Policy_Number, Claim.Claim_Identifier
+) AS Subquery
+GROUP BY Policy_Policy_Number;"
+2026-11-20T19:34:22.788791,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,A,4b,A1,1,1,1,1618,259,3.233,False,stop,error,,,"SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_LossPayment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_LossReserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_ExpensePayment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_ExpenseReserve
+FROM 
+    Claim
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+JOIN 
+    Loss_Payment ON Loss_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Loss_Reserve ON Loss_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Expense_Payment ON Expense_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Expense_Reserve ON Expense_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+GROUP BY 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number","SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_LossPayment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_LossReserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_ExpensePayment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_ExpenseReserve
+FROM 
+    Claim
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+JOIN 
+    Loss_Payment ON Loss_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Loss_Reserve ON Loss_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Expense_Payment ON Expense_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Expense_Reserve ON Expense_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+GROUP BY 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number;"
+2026-11-20T19:34:23.525493,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,A,4b,A2,1,1,1,1600,60,0.735,False,stop,error,,,"SELECT Policy.Policy_Identifier, Party.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+JOIN Party ON Agreement_Party_Role.Party_Identifier = Party.Party_Identifier","SELECT Policy.Policy_Identifier, Party.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+JOIN Party ON Agreement_Party_Role.Party_Identifier = Party.Party_Identifier;"
+2026-11-20T19:34:23.919338,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,A,4b,A3,1,1,1,1599,32,0.393,False,stop,error,,,"SELECT COUNT(*) AS Number_of_Claims
+FROM Claim
+JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Insurable_Object_Identifier","SELECT COUNT(*) AS Number_of_Claims
+FROM Claim
+JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Insurable_Object_Identifier;"
+2026-11-20T19:34:24.013938,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,A,4b,A4,1,1,1,1602,5,0.094,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:27.317367,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B,4b,A0,1,1,1,2607,236,3.293,False,stop,error,,,"SELECT 
+    Policy.Policy_Number,
+    AVG(
+        (Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount)
+    ) AS Average_Loss,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims
+FROM 
+    Policy
+JOIN 
+    Policy_Amount ON Policy.Policy_Identifier = Policy_Amount.Policy_Identifier
+JOIN 
+    Claim ON Policy_Amount.Claim_Identifier = Claim.Claim_Identifier
+JOIN 
+    Loss_Payment ON Policy_Amount.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN 
+    Loss_Reserve ON Policy_Amount.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN 
+    Expense_Payment ON Policy_Amount.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+JOIN 
+    Expense_Reserve ON Policy_Amount.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    AVG(
+        (Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount)
+    ) AS Average_Loss,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims
+FROM 
+    Policy
+JOIN 
+    Policy_Amount ON Policy.Policy_Identifier = Policy_Amount.Policy_Identifier
+JOIN 
+    Claim ON Policy_Amount.Claim_Identifier = Claim.Claim_Identifier
+JOIN 
+    Loss_Payment ON Policy_Amount.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN 
+    Loss_Reserve ON Policy_Amount.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN 
+    Expense_Payment ON Policy_Amount.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+JOIN 
+    Expense_Reserve ON Policy_Amount.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:34:32.649970,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B,4b,A1,1,1,1,2602,421,5.331,False,stop,error,,,"SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Case When table_name = 'Loss_Payment' Then Claim_Amount.Claim_Amount Else 0 End) AS Loss_Payment,
+    SUM(Case When table_name = 'Loss_Reserve' Then Claim_Amount.Claim_Amount Else 0 End) AS Loss_Reserve,
+    SUM(Case When table_name = 'Expense_Payment' Then Claim_Amount.Claim_Amount Else 0 End) AS Expense_Payment,
+    SUM(Case When table_name = 'Expense_Reserve' Then Claim_Amount.Claim_Amount Else 0 End) AS Expense_Reserve
+FROM 
+    (SELECT 
+         'Loss_Payment' as table_name, 
+         Loss_Payment.Claim_Amount_Identifier, 
+         Loss_Payment.Claim_Amount
+     FROM 
+         Loss_Payment
+     UNION ALL
+     SELECT 
+         'Loss_Reserve' as table_name, 
+         Loss_Reserve.Claim_Amount_Identifier, 
+         Loss_Reserve.Claim_Amount
+     FROM 
+         Loss_Reserve
+     UNION ALL
+     SELECT 
+         'Expense_Payment' as table_name, 
+         Expense_Payment.Claim_Amount_Identifier, 
+         Expense_Payment.Claim_Amount
+     FROM 
+         Expense_Payment
+     UNION ALL
+     SELECT 
+         'Expense_Reserve' as table_name, 
+         Expense_Reserve.Claim_Amount_Identifier, 
+         Expense_Reserve.Claim_Amount
+     FROM 
+         Expense_Reserve) AS Claim_Amount
+JOIN 
+    Claim ON Claim_Amount.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Claim_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number","SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Case When table_name = 'Loss_Payment' Then Claim_Amount.Claim_Amount Else 0 End) AS Loss_Payment,
+    SUM(Case When table_name = 'Loss_Reserve' Then Claim_Amount.Claim_Amount Else 0 End) AS Loss_Reserve,
+    SUM(Case When table_name = 'Expense_Payment' Then Claim_Amount.Claim_Amount Else 0 End) AS Expense_Payment,
+    SUM(Case When table_name = 'Expense_Reserve' Then Claim_Amount.Claim_Amount Else 0 End) AS Expense_Reserve
+FROM 
+    (SELECT 
+         'Loss_Payment' as table_name, 
+         Loss_Payment.Claim_Amount_Identifier, 
+         Loss_Payment.Claim_Amount
+     FROM 
+         Loss_Payment
+     UNION ALL
+     SELECT 
+         'Loss_Reserve' as table_name, 
+         Loss_Reserve.Claim_Amount_Identifier, 
+         Loss_Reserve.Claim_Amount
+     FROM 
+         Loss_Reserve
+     UNION ALL
+     SELECT 
+         'Expense_Payment' as table_name, 
+         Expense_Payment.Claim_Amount_Identifier, 
+         Expense_Payment.Claim_Amount
+     FROM 
+         Expense_Payment
+     UNION ALL
+     SELECT 
+         'Expense_Reserve' as table_name, 
+         Expense_Reserve.Claim_Amount_Identifier, 
+         Expense_Reserve.Claim_Amount
+     FROM 
+         Expense_Reserve) AS Claim_Amount
+JOIN 
+    Claim ON Claim_Amount.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Claim_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number;"
+2026-11-20T19:34:33.357081,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B,4b,A2,1,1,1,2584,59,0.706,False,stop,error,,,"SELECT p.Policy_Identifier, pp.Party_Identifier
+FROM Policy p
+JOIN Agreement_Party_Role apr ON p.Policy_Identifier = apr.Agreement_Identifier
+JOIN Party pp ON apr.Party_Identifier = pp.Party_Identifier","```sql
+SELECT p.Policy_Identifier, pp.Party_Identifier
+FROM Policy p
+JOIN Agreement_Party_Role apr ON p.Policy_Identifier = apr.Agreement_Identifier
+JOIN Party pp ON apr.Party_Identifier = pp.Party_Identifier;
+```"
+2026-11-20T19:34:33.456703,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B,4b,A3,1,1,1,2583,5,0.099,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:33.558711,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B,4b,A4,1,1,1,2586,5,0.101,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:35.891734,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C,4b,A0,1,1,1,3446,170,2.326,False,stop,error,,,"SELECT 
+    Policy.Policy_Number,
+    COUNT(Claim.Claim_Identifier) AS Number_of_Claims,
+    (SELECT SUM(Loss_Payment.Claim_Amount) + SUM(Loss_Reserve.Claim_Amount) + SUM(Expense_Payment.Claim_Amount) + SUM(Expense_Reserve.Claim_Amount)
+     FROM Loss_Payment
+     JOIN Claim ON Loss_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+     JOIN Policy ON Claim.Catastrophe_Identifier = Policy.Policy_Identifier
+     WHERE Policy.Policy_Number = Policy.Policy_Number) AS Average_Loss
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Catastrophe_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    COUNT(Claim.Claim_Identifier) AS Number_of_Claims,
+    (SELECT SUM(Loss_Payment.Claim_Amount) + SUM(Loss_Reserve.Claim_Amount) + SUM(Expense_Payment.Claim_Amount) + SUM(Expense_Reserve.Claim_Amount)
+     FROM Loss_Payment
+     JOIN Claim ON Loss_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+     JOIN Policy ON Claim.Catastrophe_Identifier = Policy.Policy_Identifier
+     WHERE Policy.Policy_Number = Policy.Policy_Number) AS Average_Loss
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Catastrophe_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:34:40.001085,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C,4b,A1,1,1,1,3441,342,4.108,False,stop,error,,,"SELECT 
+  Catastrophe.Catastrophe_Identifier,
+  Policy.Policy_Number,
+  SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+  SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+  SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+  SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+  Claim
+JOIN 
+  Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+  Policy ON Claim.Insurable_Object_Identifier = Policy.Insurable_Object_Identifier
+LEFT JOIN 
+  Loss_Payment ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Payment')
+LEFT JOIN 
+  Loss_Reserve ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Reserve')
+LEFT JOIN 
+  Expense_Payment ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Expense Payment')
+LEFT JOIN 
+  Expense_Reserve ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Expense Reserve')
+GROUP BY 
+  Catastrophe.Catastrophe_Identifier,
+  Policy.Policy_Number","```sql
+SELECT 
+  Catastrophe.Catastrophe_Identifier,
+  Policy.Policy_Number,
+  SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+  SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+  SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+  SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+  Claim
+JOIN 
+  Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+  Policy ON Claim.Insurable_Object_Identifier = Policy.Insurable_Object_Identifier
+LEFT JOIN 
+  Loss_Payment ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Payment')
+LEFT JOIN 
+  Loss_Reserve ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Reserve')
+LEFT JOIN 
+  Expense_Payment ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Expense Payment')
+LEFT JOIN 
+  Expense_Reserve ON Claim.Claim_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = Claim.Claim_Identifier AND Amount_Type_Code = 'Expense Reserve')
+GROUP BY 
+  Catastrophe.Catastrophe_Identifier,
+  Policy.Policy_Number;
+```"
+2026-11-20T19:34:40.109439,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C,4b,A2,1,1,1,3423,5,0.107,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:40.215868,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C,4b,A3,1,1,1,3422,5,0.105,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:40.332391,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C,4b,A4,1,1,1,3425,5,0.115,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:42.619269,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B_ctx8b,8b,A0,1,1,1,2950,141,2.278,False,stop,wrong,False,False,"SELECT 
+    Policy.Policy_Number,
+    AVG(Claim_Amount.Claim_Amount) AS Average_Loss,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims
+FROM 
+    Policy
+JOIN 
+    Policy_Amount ON Policy.Policy_Identifier = Policy_Amount.Policy_Identifier
+JOIN 
+    Claim ON Claim.Insurable_Object_Identifier = Policy_Amount.Insurable_Object_Identifier
+JOIN 
+    Claim_Amount ON Claim.Claim_Identifier = Claim_Amount.Claim_Identifier
+WHERE 
+    Policy_Amount.Amount_Type_Code IN ('Loss', 'Expense')
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    AVG(Claim_Amount.Claim_Amount) AS Average_Loss,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims
+FROM 
+    Policy
+JOIN 
+    Policy_Amount ON Policy.Policy_Identifier = Policy_Amount.Policy_Identifier
+JOIN 
+    Claim ON Claim.Insurable_Object_Identifier = Policy_Amount.Insurable_Object_Identifier
+JOIN 
+    Claim_Amount ON Claim.Claim_Identifier = Claim_Amount.Claim_Identifier
+WHERE 
+    Policy_Amount.Amount_Type_Code IN ('Loss', 'Expense')
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:34:51.310117,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B_ctx8b,8b,A1,1,1,1,2945,677,8.688,False,stop,error,,,"SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Loss_Payment
+JOIN 
+    Claim ON Loss_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+UNION ALL
+SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Loss_Reserve
+JOIN 
+    Claim ON Loss_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+UNION ALL
+SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Expense_Payment
+JOIN 
+    Claim ON Expense_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+UNION ALL
+SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Expense_Reserve
+JOIN 
+    Claim ON Expense_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier","```sql
+SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Loss_Payment
+JOIN 
+    Claim ON Loss_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+UNION ALL
+SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Loss_Reserve
+JOIN 
+    Claim ON Loss_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+UNION ALL
+SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Expense_Payment
+JOIN 
+    Claim ON Expense_Payment.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+UNION ALL
+SELECT 
+    Catastrophe.Catastrophe_Identifier,
+    Policy.Policy_Number,
+    SUM(Loss_Payment.Claim_Amount) AS Total_Loss_Payment,
+    SUM(Loss_Reserve.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(Expense_Payment.Claim_Amount) AS Total_Expense_Payment,
+    SUM(Expense_Reserve.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Expense_Reserve
+JOIN 
+    Claim ON Expense_Reserve.Claim_Amount_Identifier = Claim.Claim_Amount_Identifier
+JOIN 
+    Catastrophe ON Claim.Catastrophe_Identifier = Catastrophe.Catastrophe_Identifier
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier;
+```"
+2026-11-20T19:34:51.413909,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B_ctx8b,8b,A2,1,1,1,2927,5,0.103,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:51.516053,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B_ctx8b,8b,A3,1,1,1,2926,5,0.101,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:51.624489,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,B_ctx8b,8b,A4,1,1,1,2929,5,0.107,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:54.488332,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C_ctx8b,8b,A0,1,1,1,4252,199,2.859,False,stop,error,,,"SELECT 
+    Policy.Policy_Number,
+    AVG(total_loss) AS average_loss,
+    COUNT(Claim.Claim_Identifier) AS number_of_claims
+FROM 
+    Policy
+JOIN 
+    Claim ON Policy.Policy_Identifier = Claim.Insurable_Object_Identifier
+JOIN 
+    Claim_Amount ON Claim.Claim_Identifier = Claim_Amount.Claim_Identifier
+JOIN 
+    Loss_Payment ON Claim_Amount.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN 
+    Loss_Reserve ON Claim_Amount.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN 
+    Expense_Payment ON Claim_Amount.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+JOIN 
+    Expense_Reserve ON Claim_Amount.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    AVG(total_loss) AS average_loss,
+    COUNT(Claim.Claim_Identifier) AS number_of_claims
+FROM 
+    Policy
+JOIN 
+    Claim ON Policy.Policy_Identifier = Claim.Insurable_Object_Identifier
+JOIN 
+    Claim_Amount ON Claim.Claim_Identifier = Claim_Amount.Claim_Identifier
+JOIN 
+    Loss_Payment ON Claim_Amount.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+JOIN 
+    Loss_Reserve ON Claim_Amount.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+JOIN 
+    Expense_Payment ON Claim_Amount.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+JOIN 
+    Expense_Reserve ON Claim_Amount.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:34:59.287426,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C_ctx8b,8b,A1,1,1,1,4247,387,4.797,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(CASE WHEN lp.Claim_Amount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Loss_Payment,
+    SUM(CASE WHEN lr.Claim_Amount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Loss_Reserve,
+    SUM(CASE WHEN ep.Claim_AAmount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Expense_Payment,
+    SUM(CASE WHEN er.Claim_Amount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Expense_Reserve
+FROM 
+    Claim c
+JOIN 
+    Catastrophe ca ON c.Catastrophe_Identifier = ca.Catastrophe_Identifier
+JOIN 
+    Policy p ON c.Insurable_Object_Identifier = p.Policy_Identifier
+LEFT JOIN 
+    Loss_Payment lp ON lp.Claim_Amount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Loss_Reserve lr ON lr.Claim_Amount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Expense_Payment ep ON ep.Claim_AAmount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Expense_Reserve er ON er.Claim_Amount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Claim_Amount la ON la.Claim_Identifier = c.Claim_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(CASE WHEN lp.Claim_Amount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Loss_Payment,
+    SUM(CASE WHEN lr.Claim_Amount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Loss_Reserve,
+    SUM(CASE WHEN ep.Claim_AAmount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Expense_Payment,
+    SUM(CASE WHEN er.Claim_Amount_Identifier IS NOT NULL THEN la.Claim_Amount END) AS Total_Expense_Reserve
+FROM 
+    Claim c
+JOIN 
+    Catastrophe ca ON c.Catastrophe_Identifier = ca.Catastrophe_Identifier
+JOIN 
+    Policy p ON c.Insurable_Object_Identifier = p.Policy_Identifier
+LEFT JOIN 
+    Loss_Payment lp ON lp.Claim_Amount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Loss_Reserve lr ON lr.Claim_Amount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Expense_Payment ep ON ep.Claim_AAmount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Expense_Reserve er ON er.Claim_Amount_Identifier = (SELECT Claim_Amount_Identifier FROM Claim_Amount WHERE Claim_Identifier = c.Claim_Identifier)
+LEFT JOIN 
+    Claim_Amount la ON la.Claim_Identifier = c.Claim_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number;
+```"
+2026-11-20T19:34:59.404793,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C_ctx8b,8b,A2,1,1,1,4229,5,0.116,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:59.517570,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C_ctx8b,8b,A3,1,1,1,4228,5,0.112,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:34:59.635243,4b,qwen3:4b-8k-nothink-recommended,cf5477c9af089c977c27da5b94b4d88f6e142e6b0f9960a51fdd7bd6d9df29da,C_ctx8b,8b,A4,1,1,1,4231,5,0.116,False,stop,refusal,,,,CANNOT_ANSWER
+2026-11-20T19:35:16.749054,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,A,8b,A0,1,1,1,1623,250,5.028,False,stop,error,,,"SELECT 
+    Policy.Policy_Number,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims,
+    AVG(Total_Loss) AS Average_Loss
+FROM (
+    SELECT 
+        Claim_Identifier,
+        (Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Total_Loss
+    FROM Claim_Amount
+    JOIN Loss_Payment ON Claim_Amount.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+    JOIN Loss_Reserve ON Claim_Amount.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+    JOIN Expense_Payment ON Claim_Amount.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+    JOIN Expense_Reserve ON Claim_Amount.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+) AS Total_Losses
+JOIN Claim ON Total_Losses.Claim_Identifier = Claim.Claim_Identifier
+JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+GROUP BY Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims,
+    AVG(Total_Loss) AS Average_Loss
+FROM (
+    SELECT 
+        Claim_Identifier,
+        (Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Total_Loss
+    FROM Claim_Amount
+    JOIN Loss_Payment ON Claim_Amount.Claim_Amount_Identifier = Loss_Payment.Claim_Amount_Identifier
+    JOIN Loss_Reserve ON Claim_Amount.Claim_Amount_Identifier = Loss_Reserve.Claim_Amount_Identifier
+    JOIN Expense_Payment ON Claim_Amount.Claim_Amount_Identifier = Expense_Payment.Claim_Amount_Identifier
+    JOIN Expense_Reserve ON Claim_Amount.Claim_Amount_Identifier = Expense_Reserve.Claim_Amount_Identifier
+) AS Total_Losses
+JOIN Claim ON Total_Losses.Claim_Identifier = Claim.Claim_Identifier
+JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+GROUP BY Policy.Policy_Number;
+```"
+2026-11-20T19:35:19.595963,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,A,8b,A1,1,1,1,1618,159,2.845,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(la.Claim_Amount) AS Total_Loss
+FROM Claim_Amount la
+JOIN Loss_Payment lp ON la.Claim_Amount_Identifier = lp.Claim_Amount_Identifier
+JOIN Claim cl ON la.Claim_Identifier = cl.Claim_Identifier
+JOIN Insurable_Object io ON cl.Insurable_Object_Identifier = io.Insurable_Object_Identifier
+JOIN Policy p ON io.Policy_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, 
+    p.Policy_Number","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(la.Claim_Amount) AS Total_Loss
+FROM Claim_Amount la
+JOIN Loss_Payment lp ON la.Claim_Amount_Identifier = lp.Claim_Amount_Identifier
+JOIN Claim cl ON la.Claim_Identifier = cl.Claim_Identifier
+JOIN Insurable_Object io ON cl.Insurable_Object_Identifier = io.Insurable_Object_Identifier
+JOIN Policy p ON io.Policy_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, 
+    p.Policy_Number;
+```"
+2026-11-20T19:35:20.874185,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,A,8b,A2,1,1,1,1600,65,1.269,False,stop,wrong,False,False,"SELECT Policy.Policy_Identifier, Agreement_Party_Role.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+WHERE Agreement_Party_Role.Party_Role_Code = 'Policyholder'","```sql
+SELECT Policy.Policy_Identifier, Agreement_Party_Role.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+WHERE Agreement_Party_Role.Party_Role_Code = 'Policyholder';
+```"
+2026-11-20T19:35:21.480749,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,A,8b,A3,1,1,1,1599,35,0.602,False,stop,wrong,False,False,SELECT COUNT(DISTINCT Claim.Company_Claim_Number) FROM Claim JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier,"```sql
+SELECT COUNT(DISTINCT Claim.Company_Claim_Number) FROM Claim JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier;
+```"
+2026-11-20T19:35:24.041851,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,A,8b,A4,1,1,1,1602,138,2.559,False,stop,error,,,"SELECT 
+    Policy.Policy_Number, 
+    AVG(JULIANDAY(Claim.Close_Date) - JULIANDAY(Claim.Claim_Reported_Date)) AS Average_Settlement_Time_Days
+FROM 
+    Claim
+JOIN 
+    Insurable_Object ON Claim.Insurable_Object_Identifier = Insurable_Object.Insurable_Object_Identifier
+JOIN 
+    Policy_Coverage_Detail ON Insurable_Object.Insurable_Object_Identifier = Policy_Coverage_Detail.Insurable_Object_Identifier
+JOIN 
+    Policy ON Policy_Coverage_Detail.Policy_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number, 
+    AVG(JULIANDAY(Claim.Close_Date) - JULIANDAY(Claim.Claim_Reported_Date)) AS Average_Settlement_Time_Days
+FROM 
+    Claim
+JOIN 
+    Insurable_Object ON Claim.Insurable_Object_Identifier = Insurable_Object.Insurable_Object_Identifier
+JOIN 
+    Policy_Coverage_Detail ON Insurable_Object.Insurable_Object_Identifier = Policy_Coverage_Detail.Insurable_Object_Identifier
+JOIN 
+    Policy ON Policy_Coverage_Detail.Policy_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:35:28.706433,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,B,8b,A0,1,1,1,2950,197,4.659,False,stop,error,,,"SELECT 
+    Policy.Policy_Number,
+    AVG(Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Average_Loss,
+    COUNT(Claim.Claim_Identifier) AS Number_of_Claims
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+LEFT JOIN 
+    Loss_Payment ON Claim.Claim_Identifier = Loss_Payment.Claim_Amount_Identifier
+LEFT JOIN 
+    Loss_Reserve ON Claim.Claim_Identifier = Loss_Reserve.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Payment ON Claim.Claim_Identifier = Expense_Payment.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Reserve ON Claim.Claim_Identifier = Expense_Reserve.Claim_Amount_Identifier
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    AVG(Loss_Payment.Claim_Amount + Loss_Reserve.Claim_Amount + Expense_Payment.Claim_Amount + Expense_Reserve.Claim_Amount) AS Average_Loss,
+    COUNT(Claim.Claim_Identifier) AS Number_of_Claims
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+LEFT JOIN 
+    Loss_Payment ON Claim.Claim_Identifier = Loss_Payment.Claim_Amount_Identifier
+LEFT JOIN 
+    Loss_Reserve ON Claim.Claim_Identifier = Loss_Reserve.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Payment ON Claim.Claim_Identifier = Expense_Payment.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Reserve ON Claim.Claim_Identifier = Expense_Reserve.Claim_Amount_Identifier
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:35:38.676022,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,B,8b,A1,1,1,1,2945,548,9.967,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Loss_Payment lp ON cla.Claim_Amount_Identifier = lp.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number
+UNION ALL
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Loss_Reserve lr ON cla.Claim_Amount_Identifier = lr.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number
+UNION ALL
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Expense_Payment ep ON cla.Claim_Amount_Identifier = ep.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number
+UNION ALL
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Expense_Reserve er ON cla.Claim_Amount_Identifier = er.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe-Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Loss_Payment lp ON cla.Claim_Amount_Identifier = lp.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number
+UNION ALL
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Loss_Reserve lr ON cla.Claim_Amount_Identifier = lr.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number
+UNION ALL
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Expense_Payment ep ON cla.Claim_Amount_Identifier = ep.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe_Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number
+UNION ALL
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(cla.Claim_Amount) AS Total_Loss
+FROM Claim_Amount cla
+JOIN Expense_Reserve er ON cla.Claim_Amount_Identifier = er.Claim_Amount_Identifier
+JOIN Claim cl ON cla.Claim_Identifier = cl.Claim_Identifier
+JOIN Policy p ON cl.Insurable_Object_Identifier = p.Policy_Identifier
+JOIN Catastrophe c ON cl.Catastrophe-Identifier = c.Catastrophe_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier,
+    p.Policy_Number;
+```"
+2026-11-20T19:35:39.822936,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,B,8b,A2,1,1,1,2927,64,1.144,False,stop,wrong,False,False,"SELECT Policy.Policy_Identifier, Agreement_Party_Role.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+WHERE Agreement_Party_Role.Party_Role_Code = 'PH'","```sql
+SELECT Policy.Policy_Identifier, Agreement_Party_Role.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Agreement_Identifier
+WHERE Agreement_Party_Role.Party_Role_Code = 'PH';
+```"
+2026-11-20T19:35:40.318738,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,B,8b,A3,1,1,1,2926,26,0.493,False,stop,wrong,False,False,"SELECT COUNT(DISTINCT Company_Claim_Number) AS Claim_Count_By_Policy_Number
+FROM Claim","```sql
+SELECT COUNT(DISTINCT Company_Claim_Number) AS Claim_Count_By_Policy_Number
+FROM Claim;
+```"
+2026-11-20T19:35:41.785246,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,B,8b,A4,1,1,1,2929,82,1.463,False,stop,wrong,False,False,"SELECT 
+    Policy.Policy_Number, 
+    AVG(JULIANDAY(Claim.Claim_Close_Date) - JULIANDAY(Claim.Claim_Reported_Date)) AS Average_Settlement_Time_Days
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number, 
+    AVG(JULIANDAY(Claim.Claim_Close_Date) - JULIANDAY(Claim.Claim_Reported_Date)) AS Average_Settlement_Time_Days
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:36:23.927889,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,C,8b,A0,1,1,1,4252,646,12.052,False,stop,error,,,"SELECT 
+    Policy.Policy_Number,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims,
+    AVG(total_loss_payments.total_loss_payments_amount + total_expense_payments.total_expense_payments_amount + total_loss_reserves.total_loss_reserves_amount + total_expense_reserves.total_expense_reserves_amount) AS Average_Loss
+FROM 
+    Policy
+LEFT JOIN 
+    Claim ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = Claim.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_loss_payments_amount
+        FROM 
+            Loss_Payment
+        INNER JOIN 
+            Claim_Amount ON Loss_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_loss_payments ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_loss_payments.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_expense_payments_amount
+        FROM 
+            Expense_Payment
+        INNER JOIN 
+            Claim_Amount ON Expense_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_expense_payments ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_expense_payments.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_loss_reserves_amount
+        FROM 
+            Loss_Reserve
+        INNER JOIN 
+            Claim_Amount ON Loss_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_loss_reserves ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_loss_reserves.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_expense_reserves_amount
+        FROM 
+            Expense_Reserve
+        INNER JOIN 
+            Claim_Amount ON Expense_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_expense_reserves ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_expense_reserves.Claim_Identifier)
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    COUNT(DISTINCT Claim.Claim_Identifier) AS Number_of_Claims,
+    AVG(total_loss_payments.total_loss_payments_amount + total_expense_payments.total_expense_payments_amount + total_loss_reserves.total_loss_reserves_amount + total_expense_reserves.total_expense_reserves_amount) AS Average_Loss
+FROM 
+    Policy
+LEFT JOIN 
+    Claim ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = Claim.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_loss_payments_amount
+        FROM 
+            Loss_Payment
+        INNER JOIN 
+            Claim_Amount ON Loss_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_loss_payments ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_loss_payments.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_expense_payments_amount
+        FROM 
+            Expense_Payment
+        INNER JOIN 
+            Claim_Amount ON Expense_Payment.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_expense_payments ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_expense_payments.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_loss_reserves_amount
+        FROM 
+            Loss_Reserve
+        INNER JOIN 
+            Claim_Amount ON Loss_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_loss_reserves ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_loss_reserves.Claim_Identifier)
+LEFT JOIN 
+    (
+        SELECT 
+            Claim_Amount.Claim_Identifier,
+            SUM(Claim_Amount.Claim_Amount) AS total_expense_reserves_amount
+        FROM 
+            Expense_Reserve
+        INNER JOIN 
+            Claim_Amount ON Expense_Reserve.Claim_Amount_Identifier = Claim_Amount.Claim_Amount_Identifier
+        GROUP BY 
+            Claim_Amount.Claim_Identifier
+    ) AS total_expense_reserves ON Policy.Policy_Identifier = (SELECT DISTINCT Policy_Identifier FROM Claim_Coverage WHERE Claim_Coverage.Claim_Identifier = total_expense_reserves.Claim_Identifier)
+GROUP BY 
+    Policy.Policy_Number;
+```"
+2026-11-20T19:36:28.434086,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,C,8b,A1,1,1,1,4247,245,4.504,False,stop,error,,,"SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(lp.Claim_Amount) AS Total_Loss_Payment,
+    SUM(lr.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(ep.Claim_Amount) AS Total_Expense_Payment,
+    SUM(er.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim c
+JOIN 
+    Policy p ON c.Insurable_Object_Identifier = p.Policy_Identifier
+LEFT JOIN 
+    Loss_Payment lp ON lp.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+LEFT JOIN 
+    Loss_Reserve lr ON lr.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Payment ep ON ep.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Reserve er ON er.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+JOIN 
+    Claim_Amount la ON c.Claim_Identifier = la.Claim_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, p.Policy_Number","```sql
+SELECT 
+    c.Catastrophe_Identifier,
+    p.Policy_Number,
+    SUM(lp.Claim_Amount) AS Total_Loss_Payment,
+    SUM(lr.Claim_Amount) AS Total_Loss_Reserve,
+    SUM(ep.Claim_Amount) AS Total_Expense_Payment,
+    SUM(er.Claim_Amount) AS Total_Expense_Reserve
+FROM 
+    Claim c
+JOIN 
+    Policy p ON c.Insurable_Object_Identifier = p.Policy_Identifier
+LEFT JOIN 
+    Loss_Payment lp ON lp.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+LEFT JOIN 
+    Loss_Reserve lr ON lr.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Payment ep ON ep.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+LEFT JOIN 
+    Expense_Reserve er ON er.Claim_Amount_Identifier = la.Claim_Amount_Identifier
+JOIN 
+    Claim_Amount la ON c.Claim_Identifier = la.Claim_Identifier
+GROUP BY 
+    c.Catastrophe_Identifier, p.Policy_Number;
+```"
+2026-11-20T19:36:29.326465,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,C,8b,A2,1,1,1,4229,48,0.89,False,stop,error,,,"SELECT Policy.Policy_Identifier, Agreement_Party_Role.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Policy_Identifier","```sql
+SELECT Policy.Policy_Identifier, Agreement_Party_Role.Party_Identifier
+FROM Policy
+JOIN Agreement_Party_Role ON Policy.Policy_Identifier = Agreement_Party_Role.Policy_Identifier;
+```"
+2026-11-20T19:36:30.173330,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,C,8b,A3,1,1,1,4228,45,0.844,False,stop,wrong,False,False,"SELECT COUNT(DISTINCT Claim.Claim_Identifier) AS Total_Claims_By_Policy_Number
+FROM Claim
+JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier","```sql
+SELECT COUNT(DISTINCT Claim.Claim_Identifier) AS Total_Claims_By_Policy_Number
+FROM Claim
+JOIN Policy ON Claim.Insurable_Object_Identifier = Policy.Policy_Identifier;
+```"
+2026-11-20T19:36:32.765642,8b,qwen3:8b-8k-nothink-recommended,3df174f5c2da0fea641a06d644b602112e642db08f0e4bde12c5f38e5b2420e6,C,8b,A4,1,1,1,4231,146,2.59,False,stop,error,,,"SELECT 
+    Policy.Policy_Number,
+    AVG(JULIANDAY(Claim.Close_Date) - JULIANDAY(Claim.Open_Date)) AS Average_Settlement_Time_Days
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Claim_Identifier = (SELECT DISTINCT Claim_Coverage.Claim_Identifier FROM Claim_Coverage JOIN Policy_Coverage_Detail ON Claim_Coverage.Policy_Coverage_Detail_Identifier = Policy_Coverage_Detail.Policy_Coverage_Detail_Identifier WHERE Policy_Coverage_Detail.Policy_Identifier = Policy.Policy_Identifier)
+WHERE 
+    Claim.Claim_Status_Code = 'Closed'
+GROUP BY 
+    Policy.Policy_Number","```sql
+SELECT 
+    Policy.Policy_Number,
+    AVG(JULIANDAY(Claim.Close_Date) - JULIANDAY(Claim.Open_Date)) AS Average_Settlement_Time_Days
+FROM 
+    Claim
+JOIN 
+    Policy ON Claim.Claim_Identifier = (SELECT DISTINCT Claim_Coverage.Claim_Identifier FROM Claim_Coverage JOIN Policy_Coverage_Detail ON Claim_Coverage.Policy_Coverage_Detail_Identifier = Policy_Coverage_Detail.Policy_Coverage_Detail_Identifier WHERE Policy_Coverage_Detail.Policy_Identifier = Policy.Policy_Identifier)
+WHERE 
+    Claim.Claim_Status_Code = 'Closed'
+GROUP BY 
+    Policy.Policy_Number;
+```"
